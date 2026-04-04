@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+    container_name: univallinfo_api_prod
+    ports:
+      - '${PUBLIC_PORT}:${PORT}'
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: always
+
+  db:
+    image: mysql:8.0
+    container_name: univallinfo_db_prod
+    ports:
+      - '127.0.0.1:${DB_PORT}:3306'
+    env_file:
+      - .env
+    environment:
+      # 보안 세팅: Root 비밀번호와 일반 유저를 명확히 분리하여 매핑
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER} # 앱이 접속할 일반 유저명 (예: univ_app_user)
+      - MYSQL_PASSWORD=${DB_PASSWORD} # 해당 유저의 비밀번호
+    volumes:
+      - mysql_data_prod:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 20s
+      retries: 10
+    restart: always
+
+  redis:
+    image: redis:alpine
+    container_name: univallinfo_redis_prod
+    ports:
+      - '127.0.0.1:${REDIS_PORT}:6379'
+    volumes:
+      - redis_data_prod:/data
+    restart: always
+
+volumes:
+  mysql_data_prod:
+  redis_data_prod:
