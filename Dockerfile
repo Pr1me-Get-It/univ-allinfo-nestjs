@@ -1,24 +1,24 @@
 # [Stage 1: Builder]
-FROM node:18-alpine AS builder
+FROM node:24-alpine AS builder
 
 WORKDIR /usr/src/app
 
 # 패키지 매니저 파일만 먼저 복사하여 캐시 효율 극대화
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 # NestJS 빌드
 COPY . .
 RUN npm run build
 
 # [Stage 2: Production]
-FROM node:18-alpine AS production
+FROM node:24-alpine AS production
 
 WORKDIR /usr/src/app
 
 # production 모드로 패키지 설치 (devDependencies 제외)
 COPY package*.json ./
-RUN npm install --only=production
+RUN npm ci --omit=dev
 
 COPY --from=builder /usr/src/app/dist ./dist
 
