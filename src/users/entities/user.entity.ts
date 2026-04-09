@@ -24,7 +24,7 @@ export class User {
   providerId!: string;
 
   @Column({ type: 'varchar', length: 255, select: false, nullable: true })
-  hashedRefreshToken?: string;
+  hashedRefreshToken?: string | null;
 
   // UserProfile과 1:1 관계 설정
   @OneToOne(() => UserProfile, (profile) => profile.user, { cascade: true })

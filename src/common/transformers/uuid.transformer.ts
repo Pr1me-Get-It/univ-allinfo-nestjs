@@ -16,6 +16,9 @@ export class UUIDTransformer implements ValueTransformer {
     if (value === null || value === undefined) {
       return value;
     }
+    if (typeof value === 'string') {
+      return value; // from이 두 번 호출되는 경우 방어
+    }
     // BIN_TO_UUID
     return UUID.ofInner(value).toString();
   }
