@@ -37,7 +37,7 @@ export class AuthService {
       payload?.email,
     );
 
-    return await this.generateTokenAndUpdateRTR(user.id);
+    return { ...(await this.generateTokenAndUpdateRTR(user.id)), user: user };
   }
 
   async refreshTokens(userId: string, incomingRefreshToken: string) {

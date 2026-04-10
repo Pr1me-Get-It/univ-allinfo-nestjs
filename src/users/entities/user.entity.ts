@@ -1,10 +1,19 @@
-import { BeforeInsert, Column, Entity, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToOne,
+  PrimaryColumn,
+  Unique,
+} from 'typeorm';
 import { uuidv7 } from 'uuidv7';
 import { OauthProvider } from '../enums/oauth-provider.enum';
 import { UUIDTransformer } from '../../common/transformers/uuid.transformer';
 import { UserProfile } from './user-profile.entity';
 
 @Entity('users')
+@Unique(['provider', 'providerId'])
 export class User {
   @PrimaryColumn({
     type: 'binary',
@@ -25,6 +34,9 @@ export class User {
 
   @Column({ type: 'varchar', length: 255, select: false, nullable: true })
   hashedRefreshToken?: string | null;
+
+  @CreateDateColumn()
+  createdAt!: Date;
 
   // UserProfile과 1:1 관계 설정
   @OneToOne(() => UserProfile, (profile) => profile.user, { cascade: true })

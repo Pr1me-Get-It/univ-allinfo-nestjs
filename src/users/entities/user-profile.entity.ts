@@ -31,12 +31,12 @@ export class UserProfile {
     enum: College,
     nullable: false,
   })
-  college!: string;
+  college!: College;
 
   @Column({
     type: 'enum',
     enum: Department,
     nullable: false,
   })
-  department!: string;
+  department!: Department;
 }
