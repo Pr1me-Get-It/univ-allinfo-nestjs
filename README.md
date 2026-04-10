@@ -8,8 +8,8 @@
 - **Database**: MySQL
 - **ORM**: [TypeORM](https://typeorm.io/)
 - **Authentication**: JWT, Passport, OAuth (Apple Login 예정)
-- **Task Scheduling**: `@nestjs/schedule` (공지사항 정기 크롤링)
-- **Push Notifications**: Expo Server SDK
+- **Task Scheduling**: @nestjs/schedule (공지사항 정기 크롤링 예정)
+- **Push Notifications**: Expo Server SDK (예정)
 
 ## 🏗️ 도메인 및 모듈 구조 (Structure)
 
