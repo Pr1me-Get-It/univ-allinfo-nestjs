@@ -11,3 +11,4 @@
 - Do not provide only explanations — **always include actual code changes using a `suggestion` block.**
 - A `suggestion` block must contain **code only**.
 - Any explanation must be written **outside** the `suggestion` block.
+- **Skip Test Files (`.spec` files):** Do not review, analyze, or leave comments on any test files (e.g., `*.spec.ts`, `*.spec.js`). Completely exclude them from your PR review process and focus strictly on the core implementation files.
