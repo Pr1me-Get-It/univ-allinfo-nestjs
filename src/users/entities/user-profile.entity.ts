@@ -1,4 +1,12 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 import { UUIDTransformer } from '../../common/transformers/uuid.transformer';
 import { College } from '../enums/college.enum';
@@ -39,4 +47,10 @@ export class UserProfile {
     nullable: false,
   })
   department!: Department;
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }
