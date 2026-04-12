@@ -21,7 +21,9 @@ export class ScraperService {
     private readonly noticeRepository: Repository<Notice>,
   ) {}
 
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  // 06시부터 22시까지 매 4시간마다 실행
+  // 알아서 비동기처리 됨. API 응답 지연 없음.
+  @Cron('0 6-22/4 * * *')
   async runAllScrapers() {
     this.logger.log('✨ 자동 스크래핑 파이프라인을 시작합니다...');
 

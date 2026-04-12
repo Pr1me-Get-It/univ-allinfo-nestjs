@@ -2,10 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity('notices')
+@Index('IDX_NOTICE_SOURCE', ['source'])
 export class Notice {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
   id!: string;

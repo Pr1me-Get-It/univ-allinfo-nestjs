@@ -146,7 +146,21 @@
       {
         "name": "진로취업",
         "path": "/HOME/knujob/sub.htm?nav_code=knu1623817159"
-      },
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(6)"
+    }
+  },
+  {
+    "code": "CARE",
+    "baseUrl": "https://home.knu.ac.kr/",
+    "boards": [
       {
         "name": "현장실습",
         "path": "/HOME/knujob/sub.htm?nav_code=knu1623826179"
