@@ -29,13 +29,24 @@ export class User {
   @Column({ type: 'enum', enum: OauthProvider, nullable: false })
   provider!: OauthProvider;
 
-  @Column({ type: 'varchar', length: 128, nullable: false })
+  @Column({
+    name: 'provider_id',
+    type: 'varchar',
+    length: 128,
+    nullable: false,
+  })
   providerId!: string;
 
-  @Column({ type: 'varchar', length: 255, select: false, nullable: true })
+  @Column({
+    name: 'hashed_refresh_token',
+    type: 'varchar',
+    length: 255,
+    select: false,
+    nullable: true,
+  })
   hashedRefreshToken?: string | null;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 
   // UserProfile과 1:1 관계 설정
