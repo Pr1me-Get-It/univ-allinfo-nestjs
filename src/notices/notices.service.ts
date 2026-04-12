@@ -27,8 +27,8 @@ export class NoticesService {
       throw new NotFoundException(`ID가 ${id}인 공지사항을 찾을 수 없습니다.`);
     }
 
+    await this.noticeRepository.increment({ id }, 'views', 1);
     notice.views += 1;
-    await this.noticeRepository.save(notice);
 
     return plainToInstance(NoticeResponseDto, notice, {
       excludeExtraneousValues: true,
@@ -84,10 +84,12 @@ export class NoticesService {
         }
 
         const cursorDate = new Date(decoded.postedAt);
+        if (isNaN(cursorDate.getTime())) {
+          throw new Error('Invalid postedAt in cursor');
+        }
 
         qb = qb.andWhere(
-          '((notice.postedAt < :cursorDate)' +
-            'OR (notice.postedAt = :cursorDate AND notice.id < :cursorId))',
+          '((notice.postedAt < :cursorDate) OR (notice.postedAt = :cursorDate AND notice.id < :cursorId))',
           {
             cursorDate: cursorDate,
             cursorId: decoded.id,

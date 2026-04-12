@@ -24,6 +24,7 @@ export const extractNotices = async (
       // ⚠️ 403 Forbidden 에러(봇 차단) 방지를 위해 브라우저 헤더(User-Agent)를 강제 주입
       const response = await axios.get(targetUrl, {
         headers: {
+          timeout: 10000,
           'User-Agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         },
@@ -126,7 +127,10 @@ export const extractNotices = async (
           postedAt.getFullYear() > 2037 ||
           postedAt.getFullYear() < 2000
         ) {
-          // postedAt = new Date(); // 잘못된 날짜는 현재 날짜로 강제 보정
+          postedAt = new Date(); // 잘못된 날짜는 현재 날짜로 강제 보정 및 로그 기록
+          console.warn(
+            `[Date Parsing Warning] 게시물 "${title}"의 날짜 "${postedAtString}"를 파싱하는 데 실패했습니다. 현재 날짜로 대체합니다.`,
+          );
         }
 
         notices.push({

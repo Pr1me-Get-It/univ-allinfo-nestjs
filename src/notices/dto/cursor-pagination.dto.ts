@@ -28,6 +28,8 @@ export class CursorPaginationDto {
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
+  @Transform(({ value }) =>
+    value == null ? undefined : Array.isArray(value) ? value : [value],
+  )
   sources?: string[];
 }

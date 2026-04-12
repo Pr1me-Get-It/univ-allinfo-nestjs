@@ -92,32 +92,6 @@
     }
   },
   {
-    "code": "DRML",
-    "baseUrl": "https://dorm.knu.ac.kr",
-    "boards": [
-      {
-        "name": "선발공지사항",
-        "path": "/app/board24"
-      },
-      {
-        "name": "공지사항(BTL)",
-        "path": "/app/board21"
-      },
-      {
-        "name": "공지사항(재정)",
-        "path": "/app/board2"
-      }
-    ],
-    "pageParam": "?page=",
-    "maxPage": 1,
-    "selectors": {
-      "row": "table tbody tr",
-      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
-      "title": ".td_subject a",
-      "date": "td:nth-child(5)"
-    }
-  },
-  {
     "code": "INTL",
     "baseUrl": "https://home.knu.ac.kr",
     "boards": [
