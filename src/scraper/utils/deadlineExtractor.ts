@@ -201,11 +201,14 @@ export const extractDeadline = async (
 
       (notice as any).kickoff = toDate(start);
       (notice as any).deadline = toDate(end);
-    } catch (error) {
-      // on error, set nulls but don't throw
+    } catch (error: any) {
+      const url = (notice as any).url || (notice as any).link || '';
+      console.warn(
+        `[Deadline Extractor] Failed to extract deadline for "${url}":`,
+        error.message,
+      );
       (notice as any).kickoff = (notice as any).kickoff ?? null;
       (notice as any).deadline = (notice as any).deadline ?? null;
-      // keep going
     }
   }
 
