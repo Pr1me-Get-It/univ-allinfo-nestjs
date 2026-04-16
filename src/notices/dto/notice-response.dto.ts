@@ -20,5 +20,8 @@ export class NoticeResponseDto {
   views!: number;
 
   @Expose()
-  createdAt!: Date;
+  kickoff!: Date | null;
+
+  @Expose()
+  deadline!: Date | null;
 }
