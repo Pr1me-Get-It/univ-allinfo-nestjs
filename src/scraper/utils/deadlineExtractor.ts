@@ -136,11 +136,12 @@ export const extractDeadline = async (
   ];
 
   for (const notice of notices) {
-    // throttle to be polite
-    await sleep(1200);
     try {
       const url = (notice as any).url || (notice as any).link || '';
       if (!url) continue;
+
+      // throttle to be polite
+      await sleep(1200);
 
       const response = await axios.get(url, {
         headers: {

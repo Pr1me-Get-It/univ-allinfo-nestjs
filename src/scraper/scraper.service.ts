@@ -47,7 +47,7 @@ export class ScraperService {
           const notices = await extractNotices(config, board);
           if (notices.length === 0) {
             this.logger.log('   - 추출된 데이터가 없습니다.');
-            return;
+            continue;
           }
 
           const newNotices = await this.dedupeNotices(notices);
