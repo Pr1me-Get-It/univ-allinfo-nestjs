@@ -21,6 +21,18 @@ export class Notice {
   @Column({ type: 'text', nullable: false })
   url!: string;
 
+  @Column({ name: 'posted_at', type: 'timestamp', nullable: false })
+  postedAt!: Date;
+
+  @Column({ type: 'int', nullable: false, default: 0 })
+  views!: number;
+
+  @Column({ type: 'timestamp', nullable: true })
+  kickoff!: Date | null;
+
+  @Column({ type: 'timestamp', nullable: true })
+  deadline!: Date | null;
+
   @Column({
     name: 'hashed_url',
     type: 'varchar',
@@ -29,12 +41,6 @@ export class Notice {
     nullable: false,
   })
   hashedUrl!: string;
-
-  @Column({ name: 'posted_at', type: 'timestamp', nullable: false })
-  postedAt!: Date;
-
-  @Column({ type: 'int', nullable: false, default: 0 })
-  views!: number;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
