@@ -3,23 +3,18 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, Repository } from 'typeorm';
-import { Notice } from './entities/notice.entity';
 import { CursorPaginationDto } from './dto/cursor-pagination.dto';
 import { NoticeResponseDto } from './dto/notice-response.dto';
 import { PaginatedNoticesDto } from './dto/paginated-notices.dto';
 import { plainToInstance } from 'class-transformer';
+import { NoticesRepository } from './notices.repository';
 
 @Injectable()
 export class NoticesService {
-  constructor(
-    @InjectRepository(Notice)
-    private readonly noticeRepository: Repository<Notice>,
-  ) {}
+  constructor(private readonly noticesRepository: NoticesRepository) {}
 
   async findOne(id: string): Promise<NoticeResponseDto> {
-    const notice = await this.noticeRepository.findOne({
+    const notice = await this.noticesRepository.findOne({
       where: { id },
     });
 
@@ -27,7 +22,7 @@ export class NoticesService {
       throw new NotFoundException(`ID가 ${id}인 공지사항을 찾을 수 없습니다.`);
     }
 
-    await this.noticeRepository.increment({ id }, 'views', 1);
+    await this.noticesRepository.increment({ id }, 'views', 1);
     notice.views += 1;
 
     return plainToInstance(NoticeResponseDto, notice, {
@@ -39,39 +34,7 @@ export class NoticesService {
     const limit = query.limit!;
     const take = limit + 1; // 다음 페이지 존재 여부 확인 '+1'
 
-    let qb = this.noticeRepository
-      .createQueryBuilder('notice')
-      .orderBy('notice.postedAt', 'DESC')
-      .addOrderBy('notice.id', 'DESC') // postedAt이 같은 경우 id로 추가 정렬
-      .take(take);
-
-    if (query.keyword) {
-      qb = qb.andWhere('notice.title LIKE :keyword', {
-        keyword: `%${query.keyword}%`,
-      });
-    }
-
-    if (query.sources && query.sources.length > 0) {
-      qb = qb.andWhere(
-        new Brackets((sqb) => {
-          query.sources?.forEach((source, index) => {
-            const paramName = `source_${index}`;
-            const likeString = `${source}%`;
-
-            if (index === 0) {
-              sqb.where(`notice.source LIKE :${paramName}`, {
-                [paramName]: likeString,
-              });
-            } else {
-              sqb.orWhere(`notice.source LIKE :${paramName}`, {
-                [paramName]: likeString,
-              });
-            }
-          });
-        }),
-      );
-    }
-
+    let cursorData: { postedAt: Date; id: number } | undefined;
     if (query.cursor) {
       try {
         const decodedStr = Buffer.from(query.cursor, 'base64').toString(
@@ -80,27 +43,29 @@ export class NoticesService {
         const decoded = JSON.parse(decodedStr);
 
         if (!decoded.postedAt || !decoded.id) {
-          throw new Error('Invalid cursor payload');
+          throw new Error('Invalid cursor format');
         }
 
         const cursorDate = new Date(decoded.postedAt);
         if (isNaN(cursorDate.getTime())) {
-          throw new Error('Invalid postedAt in cursor');
+          throw new Error('Invalid date in cursor');
         }
 
-        qb = qb.andWhere(
-          '((notice.postedAt < :cursorDate) OR (notice.postedAt = :cursorDate AND notice.id < :cursorId))',
-          {
-            cursorDate: cursorDate,
-            cursorId: decoded.id,
-          },
-        );
+        cursorData = {
+          postedAt: cursorDate,
+          id: decoded.id,
+        };
       } catch (e) {
         throw new BadRequestException('Invalid cursor format');
       }
     }
 
-    const rows = await qb.getMany();
+    const rows = await this.noticesRepository.findNoticesByCursor({
+      take,
+      keyword: query.keyword,
+      sources: query.sources,
+      cursorData,
+    });
 
     const hasMore = rows.length === take;
     const items = hasMore ? rows.slice(0, limit) : rows;
