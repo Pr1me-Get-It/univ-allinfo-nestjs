@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ScraperService } from './scraper.service';
-import { Notice } from '../notices/entities/notice.entity';
-import { NoticesRepository } from '@src/notices/notices.repository';
+import { NoticesModule } from '@src/notices/notices.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Notice])],
-  providers: [ScraperService, NoticesRepository],
+  imports: [NoticesModule],
+  providers: [ScraperService],
   exports: [ScraperService],
 })
 export class ScraperModule {}
