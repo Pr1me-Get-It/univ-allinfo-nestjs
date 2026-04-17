@@ -62,7 +62,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid refresh token');
     }
 
-    return await this.generateTokenAndUpdateRTR(userId);
+    return this.generateTokenAndUpdateRTR(userId);
   }
 
   async withdraw(userId: string) {
