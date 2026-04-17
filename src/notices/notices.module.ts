@@ -3,14 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { NoticesService } from './notices.service';
 import { NoticesController } from './notices.controller';
 import { Notice } from './entities/notice.entity';
-import { ScraperModule } from '../scraper/scraper.module';
+import { NoticesRepository } from './notices.repository';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Notice]),
-    ScraperModule, // 수동 스크래핑 테스트를 위해 주입
-  ],
+  imports: [TypeOrmModule.forFeature([Notice])],
   controllers: [NoticesController],
-  providers: [NoticesService],
+  providers: [NoticesService, NoticesRepository],
+  exports: [NoticesRepository],
 })
 export class NoticesModule {}
