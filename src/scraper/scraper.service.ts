@@ -1,12 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
+import { In } from 'typeorm';
 import { Cron } from '@nestjs/schedule';
 import { Notice } from '../notices/entities/notice.entity';
 import { ScrapeConfig } from './scraper.interface';
 import { extractNotices } from './utils/extractor.util';
 import * as scrapingRulesData from './rules/scraping-rules.json';
 import { extractDeadline } from './utils/deadlineExtractor';
+import { NoticesRepository } from '@src/notices/notices.repository';
 
 @Injectable()
 export class ScraperService {
@@ -19,19 +19,14 @@ export class ScraperService {
     ? scrapingRulesData
     : (scrapingRulesData as any).default) as ScrapeConfig[];
 
-  constructor(
-    @InjectRepository(Notice)
-    private readonly noticeRepository: Repository<Notice>,
-  ) {}
+  constructor(private readonly noticeRepository: NoticesRepository) {}
 
   // 06시부터 22시까지 매 4시간마다 실행
   // 알아서 비동기처리 됨. API 응답 지연 없음.
   @Cron('0 6-22/4 * * *')
   async runAllScrapers() {
     if (this.isRunning) {
-      this.logger.warn(
-        '이전 스크래핑 작업이 아직 진행 중입니다. 이번 사이클은 스킵합니다.',
-      );
+      this.logger.warn('이전 스크래핑 작업이 진행 중. 스킵합니다.');
       return;
     }
 
@@ -44,21 +39,28 @@ export class ScraperService {
           this.logger.log(
             `>> 스크래핑 진행 중: ${config.code} - ${board.name}`,
           );
-          const notices = await extractNotices(config, board);
-          if (notices.length === 0) {
-            this.logger.log('   - 추출된 데이터가 없습니다.');
-            continue;
-          }
 
-          const newNotices = await this.dedupeNotices(notices);
-          const newNoticesWithDeadline = await extractDeadline(newNotices);
-          await this.saveNewNotices(newNoticesWithDeadline);
+          try {
+            const notices = await extractNotices(config, board);
+            if (notices.length === 0) {
+              this.logger.log('   - 추출된 데이터가 없습니다.');
+              continue;
+            }
+
+            const newNotices = await this.dedupeNotices(notices);
+            const newNoticesWithDeadline = await extractDeadline(newNotices);
+            await this.saveNewNotices(newNoticesWithDeadline);
+          } catch (innerError) {
+            this.logger.error(
+              `❌ [${board.name}] 스크래핑 중 실패했습니다. 다음 게시판으로 넘어갑니다.`,
+              innerError instanceof Error
+                ? innerError.stack
+                : String(innerError),
+            );
+          }
         }
       }
-
       this.logger.log('✅ 모든 스크래핑 작업이 완료되었습니다.');
-    } catch (e) {
-      this.logger.error('스케줄러 실행 중 예외가 발생했습니다.', e as any);
     } finally {
       this.isRunning = false;
     }
@@ -88,11 +90,9 @@ export class ScraperService {
 
     // DB에 있는 항목과 비교하여 이미 존재하는 공지를 제거
     const scrapedHashes = dedupedNotices.map((n) => n.hashedUrl as string);
-    const existingNotices = await this.noticeRepository.find({
-      select: ['hashedUrl'],
-      where: { hashedUrl: In(scrapedHashes) },
-    });
-    const existingHashSet = new Set(existingNotices.map((n) => n.hashedUrl));
+    const existingHashSet = new Set(
+      await this.noticeRepository.findHashedUrlsByHashedUrlIn(scrapedHashes),
+    );
 
     const newNotices = dedupedNotices.filter(
       (n) => !existingHashSet.has(n.hashedUrl as string),

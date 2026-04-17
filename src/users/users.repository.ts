@@ -6,7 +6,7 @@ import { OauthProvider } from './enums/oauth-provider.enum';
 @Injectable()
 export class UsersRepository extends Repository<User> {
   constructor(private readonly dataSource: DataSource) {
-    super(User, dataSource.createEntityManager());
+    super(User, dataSource.manager);
   }
 
   async findUserWithProfileById(id: string): Promise<User | null> {

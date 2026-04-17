@@ -34,7 +34,7 @@ export class NoticesService {
     const limit = query.limit!;
     const take = limit + 1; // 다음 페이지 존재 여부 확인 '+1'
 
-    let cursorData: { postedAt: Date; id: number } | undefined;
+    let cursorData: { postedAt: Date; id: string } | undefined;
     if (query.cursor) {
       try {
         const decodedStr = Buffer.from(query.cursor, 'base64').toString(

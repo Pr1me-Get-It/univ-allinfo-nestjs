@@ -1,18 +1,18 @@
-import { Brackets, DataSource, Repository } from 'typeorm';
+import { Brackets, DataSource, In, Repository } from 'typeorm';
 import { Notice } from './entities/notice.entity';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class NoticesRepository extends Repository<Notice> {
-  constructor(dataSource: DataSource) {
-    super(Notice, dataSource.createEntityManager());
+  constructor(private readonly dataSource: DataSource) {
+    super(Notice, dataSource.manager);
   }
 
   async findNoticesByCursor(params: {
     take: number;
     keyword?: string;
     sources?: string[];
-    cursorData?: { postedAt: Date; id: number }; // 디코딩된 순수 데이터만 받음
+    cursorData?: { postedAt: Date; id: string }; // 디코딩된 순수 데이터만 받음
   }): Promise<Notice[]> {
     const { take, keyword, sources, cursorData } = params;
 
@@ -58,5 +58,25 @@ export class NoticesRepository extends Repository<Notice> {
     }
 
     return qb.getMany();
+  }
+
+  async findHashedUrlsByHashedUrlIn(hashedUrls: string[]): Promise<string[]> {
+    if (hashedUrls.length === 0) {
+      return [];
+    }
+
+    const CHUNK_SIZE = 500;
+    const result: string[] = [];
+
+    for (let i = 0; i < hashedUrls.length; i += CHUNK_SIZE) {
+      const chunk = hashedUrls.slice(i, i + CHUNK_SIZE);
+      const rows = await this.find({
+        where: { hashedUrl: In(chunk) },
+        select: ['hashedUrl'],
+      });
+      result.push(...rows.map((r) => r.hashedUrl));
+    }
+
+    return result;
   }
 }
