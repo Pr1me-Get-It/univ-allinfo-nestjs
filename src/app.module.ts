@@ -8,6 +8,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NoticesModule } from './notices/notices.module';
 import { ScraperModule } from './scraper/scraper.module';
+import { GamesModule } from './games/games.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { ScraperModule } from './scraper/scraper.module';
     AuthModule,
     NoticesModule,
     ScraperModule,
+    GamesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
