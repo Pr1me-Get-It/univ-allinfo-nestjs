@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { RedisModule, RedisModuleOptions } from '@nestjs-modules/ioredis';
 import { NoticesModule } from './notices/notices.module';
 import { ScraperModule } from './scraper/scraper.module';
 import { GamesModule } from './games/games.module';

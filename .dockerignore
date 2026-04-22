@@ -8,3 +8,5 @@ Dockerfile
 docker-compose.yml
 .env
 README.md
+
+.DS_Store
