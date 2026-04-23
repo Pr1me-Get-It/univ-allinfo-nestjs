@@ -8,7 +8,7 @@
 - **Database**: MySQL
 - **ORM**: [TypeORM](https://typeorm.io/)
 - **Authentication**: JWT, Passport, OAuth (Apple Login 예정)
-- **Task Scheduling**: @nestjs/schedule (공지사항 정기 크롤링 예정)
+- **Task Scheduling**: @nestjs/schedule (공지사항 정기 크롤링)
 - **Push Notifications**: Expo Server SDK (예정)
 
 ## 🏗️ 도메인 및 모듈 구조 (Structure)
@@ -17,8 +17,8 @@
 
 - `AuthModule`: JWT 토큰 발급/검증 및 인증 인가 가드(Guards), 소셜 로그인 기능
 - `UsersModule`: 사용자 기본 정보(OAuth 연동) 및 프로필(단과대, 학과 정보) 분리 관리
-- `NoticesModule`: (예정) 학교 공지사항 등 유용한 데이터 제공 기능
-- `ScraperModule`: (예정) 주기적인 외부 데이터 크롤링 및 수집
+- `NoticesModule`: 학교 공지사항 등 유용한 데이터 제공 기능
+- `ScraperModule`: 주기적인 외부 데이터 크롤링 및 수집
 - `InteractionsModule`: (예정) 좋아요, 피드백 등 사용자 상호작용 관련 로직
 - `NotificationsModule`: (예정) Expo를 활용한 푸시 알림 발송
 
