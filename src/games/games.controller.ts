@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseEnumPipe,
   Post,
   Query,
   UseGuards,
@@ -20,7 +21,7 @@ export class GamesController {
   @UseGuards(JwtGuard)
   async submitScore(
     @CurrentUser('id') userId: string,
-    @Param('type') gameType: GameType,
+    @Param('type', new ParseEnumPipe(GameType)) gameType: GameType,
     @Body('score') score: number,
   ) {
     await this.gamesService.updateHighestScore(userId, gameType, score);
@@ -28,9 +29,9 @@ export class GamesController {
     return { message: 'Score submitted successfully' };
   }
 
-  @Get(':type/rankings')
+  @Get(':type/rankings/global')
   async getRankings(
-    @Param('type') gameType: GameType,
+    @Param('type', new ParseEnumPipe(GameType)) gameType: GameType,
     @Query('limit') limit: number = 10,
   ) {
     return this.gamesService.getTopRankings(gameType, limit);
@@ -40,9 +41,19 @@ export class GamesController {
   @UseGuards(JwtGuard)
   async getMyRank(
     @CurrentUser('id') userId: string,
-    @Param('type') gameType: GameType,
+    @Param('type', new ParseEnumPipe(GameType)) gameType: GameType,
   ) {
+    console.log(userId, gameType);
     const rank = await this.gamesService.getMyRank(userId, gameType);
     return { rank };
+  }
+
+  @Get(':type/rankings/:groupType')
+  async getGroupRankings(
+    @Param('type', new ParseEnumPipe(GameType)) gameType: GameType,
+    @Param('groupType')
+    groupType: 'college' | 'department',
+  ) {
+    return this.gamesService.getGroupRankings(gameType, groupType);
   }
 }

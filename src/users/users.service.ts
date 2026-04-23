@@ -4,10 +4,19 @@ import { OauthProvider } from './enums/oauth-provider.enum';
 import { UsersRepository } from './users.repository';
 import { NicknameUtil } from './utils/nickname.util';
 import { UserProfile } from './entities/user-profile.entity';
+import { InjectRedis } from '@nestjs-modules/ioredis';
+import Redis from 'ioredis';
+import { College } from './enums/college.enum';
+import { Department } from './enums/department.enum';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    @InjectRedis() private readonly redis: Redis,
+    private readonly eventEmiiter: EventEmitter2,
+  ) {}
 
   async findById(id: string): Promise<User | null> {
     return this.usersRepository.findOne({ where: { id } });
@@ -49,6 +58,10 @@ export class UsersService {
       });
       user = await this.usersRepository.save(user);
     }
+
+    if (user.profile) {
+      await this.cacheUserProfile(user.id, user.profile);
+    }
     return user;
   }
 
@@ -72,8 +85,39 @@ export class UsersService {
     }
 
     const profile = user.profile || this.usersRepository.createProfile();
+
+    const oldCollege = profile.college ?? College.OTHER;
+    const oldDepartment = profile.department ?? Department.OTHERS;
+
     Object.assign(profile, profileData);
     await this.usersRepository.save(user);
+
+    const newCollege = profile.college ?? College.OTHER;
+    const newDepartment = profile.department ?? Department.OTHERS;
+
+    if (oldCollege !== newCollege || oldDepartment !== newDepartment) {
+      this.eventEmiiter.emit('user.profile.updated', {
+        userId,
+        oldCollege,
+        newCollege,
+        oldDepartment,
+        newDepartment,
+      });
+    }
+
+    await this.cacheUserProfile(userId, profile);
     return profile;
+  }
+
+  private async cacheUserProfile(userId: string, profile: UserProfile) {
+    await this.redis.hset(
+      'user:profiles',
+      userId,
+      JSON.stringify({
+        nickname: profile.nickname,
+        college: profile.college ?? College.OTHER,
+        department: profile.department ?? Department.OTHERS,
+      }),
+    );
   }
 }

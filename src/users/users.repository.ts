@@ -37,7 +37,7 @@ export class UsersRepository extends Repository<User> {
   /**
    * 저장은 하지 않아요. 생성만 해요.
    */
-  async createProfile(): Promise<UserProfile> {
+  createProfile(): UserProfile {
     const profile = new UserProfile();
     return profile;
   }

@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { NoticesModule } from './notices/notices.module';
 import { ScraperModule } from './scraper/scraper.module';
@@ -45,6 +46,7 @@ import { RequestLoggerMiddleware } from './common/middleware/request-logger.midd
         },
       }),
     }),
+    EventEmitterModule.forRoot(),
     UsersModule,
     AuthModule,
     NoticesModule,
