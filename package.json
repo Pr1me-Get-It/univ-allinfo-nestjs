@@ -33,6 +33,7 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/schedule": "^6.1.1",
     "@nestjs/typeorm": "^11.0.1",
+    "@types/winston": "^2.4.4",
     "axios": "^1.15.0",
     "bcrypt": "^6.0.0",
     "cheerio": "^1.2.0",
@@ -46,7 +47,9 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.28",
-    "uuidv7": "^1.2.1"
+    "uuidv7": "^1.2.1",
+    "winston": "^3.19.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -6,10 +6,11 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RedisModule, RedisModuleOptions } from '@nestjs-modules/ioredis';
+import { RedisModule } from '@nestjs-modules/ioredis';
 import { NoticesModule } from './notices/notices.module';
 import { ScraperModule } from './scraper/scraper.module';
 import { GamesModule } from './games/games.module';
+import { RequestLoggerMiddleware } from './common/middleware/request-logger.middleware';
 
 @Module({
   imports: [
@@ -33,6 +34,17 @@ import { GamesModule } from './games/games.module';
         timezone: '+09:00',
       }),
     }),
+    RedisModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'single',
+        options: {
+          host: configService.get<string>('REDIS_HOST', '127.0.0.1'),
+          port: configService.get<number>('REDIS_PORT', 6379),
+        },
+      }),
+    }),
     UsersModule,
     AuthModule,
     NoticesModule,
@@ -42,4 +54,8 @@ import { GamesModule } from './games/games.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestLoggerMiddleware).forRoutes('*');
+  }
+}
