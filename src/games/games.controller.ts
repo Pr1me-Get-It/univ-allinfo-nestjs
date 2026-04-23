@@ -1,9 +1,48 @@
-import { Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { GamesService } from './games.service';
+import { JwtGuard } from '@src/auth/guards/jwt.guard';
+import { CurrentUser } from '@src/auth/decorators/current-user.decorator';
+import { GameType } from './enums/game-type.enum';
 
 @Controller('games')
 export class GamesController {
   constructor(private readonly gamesService: GamesService) {}
 
-  // 나중에 하자
+  @Post(':type/scores')
+  @UseGuards(JwtGuard)
+  async submitScore(
+    @CurrentUser('id') userId: string,
+    @Param('type') gameType: GameType,
+    @Body('score') score: number,
+  ) {
+    await this.gamesService.updateHighestScore(userId, gameType, score);
+    await this.gamesService.bufferScoreLog(userId, gameType, score);
+    return { message: 'Score submitted successfully' };
+  }
+
+  @Get(':type/rankings')
+  async getRankings(
+    @Param('type') gameType: GameType,
+    @Query('limit') limit: number = 10,
+  ) {
+    return this.gamesService.getTopRankings(gameType, limit);
+  }
+
+  @Get(':type/rankings/me')
+  @UseGuards(JwtGuard)
+  async getMyRank(
+    @CurrentUser('id') userId: string,
+    @Param('type') gameType: GameType,
+  ) {
+    const rank = await this.gamesService.getMyRank(userId, gameType);
+    return { rank };
+  }
 }
