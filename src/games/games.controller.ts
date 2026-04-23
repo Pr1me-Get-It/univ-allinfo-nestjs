@@ -12,6 +12,7 @@ import { GamesService } from './games.service';
 import { JwtGuard } from '@src/auth/guards/jwt.guard';
 import { CurrentUser } from '@src/auth/decorators/current-user.decorator';
 import { GameType } from './enums/game-type.enum';
+import { ScoreSubmitReqDto } from './dto/scoreSubmit.dto';
 
 @Controller('games')
 export class GamesController {
@@ -22,10 +23,14 @@ export class GamesController {
   async submitScore(
     @CurrentUser('id') userId: string,
     @Param('type', new ParseEnumPipe(GameType)) gameType: GameType,
-    @Body('score') score: number,
+    @Body() scoreDto: ScoreSubmitReqDto,
   ) {
-    await this.gamesService.updateHighestScore(userId, gameType, score);
-    await this.gamesService.bufferScoreLog(userId, gameType, score);
+    await this.gamesService.updateHighestScore(
+      userId,
+      gameType,
+      scoreDto.score,
+    );
+    await this.gamesService.bufferScoreLog(userId, gameType, scoreDto.score);
     return { message: 'Score submitted successfully' };
   }
 
@@ -43,7 +48,6 @@ export class GamesController {
     @CurrentUser('id') userId: string,
     @Param('type', new ParseEnumPipe(GameType)) gameType: GameType,
   ) {
-    console.log(userId, gameType);
     const rank = await this.gamesService.getMyRank(userId, gameType);
     return { rank };
   }
@@ -51,7 +55,7 @@ export class GamesController {
   @Get(':type/rankings/:groupType')
   async getGroupRankings(
     @Param('type', new ParseEnumPipe(GameType)) gameType: GameType,
-    @Param('groupType')
+    @Param('groupType', new ParseEnumPipe(['college', 'department']))
     groupType: 'college' | 'department',
   ) {
     return this.gamesService.getGroupRankings(gameType, groupType);

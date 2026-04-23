@@ -186,7 +186,7 @@ export class GamesService {
       userId,
       gameType,
       score,
-      playAt: new Date().toISOString(),
+      playedAt: new Date().toISOString(),
     };
 
     await this.redis.rpush('buffer:score-logs', JSON.stringify(logData));
@@ -259,15 +259,20 @@ export class GamesService {
     const length = await this.redis.llen('buffer:score-logs');
     if (length === 0) return;
 
-    const rawLogs = await this.redis.lrange('buffer:score-logs', 0, -1);
-    await this.redis.ltrim('buffer:score-logs', length, -1); // 버퍼 비워
-
+    const rawLogs = await this.redis.lrange('buffer:score-logs', 0, length - 1);
     const entitiesToInsert = rawLogs.map((log) => JSON.parse(log));
-    await this.gamesRepository.insert(entitiesToInsert);
 
-    console.log(
-      `[Batch] Flushed ${entitiesToInsert.length} score logs to the database.`,
-    );
+    try {
+      await this.gamesRepository.insert(entitiesToInsert);
+      await this.redis.ltrim('buffer:score-logs', length, -1);
+      console.log(
+        `[Batch] Flushed ${entitiesToInsert.length} score logs to the database.`,
+      );
+    } catch (error) {
+      console.log(
+        `[Batch] Failed to flush score logs to the database: ${error.message}`,
+      );
+    }
   }
 
   @OnEvent('user.profile.updated')

@@ -15,7 +15,7 @@ export class UsersService {
   constructor(
     private readonly usersRepository: UsersRepository,
     @InjectRedis() private readonly redis: Redis,
-    private readonly eventEmiiter: EventEmitter2,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async findById(id: string): Promise<User | null> {
@@ -84,7 +84,8 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    const profile = user.profile || this.usersRepository.createProfile();
+    const profile =
+      user.profile || this.usersRepository.createProfile({ userId: user.id });
 
     const oldCollege = profile.college ?? College.OTHER;
     const oldDepartment = profile.department ?? Department.OTHERS;
@@ -96,7 +97,7 @@ export class UsersService {
     const newDepartment = profile.department ?? Department.OTHERS;
 
     if (oldCollege !== newCollege || oldDepartment !== newDepartment) {
-      this.eventEmiiter.emit('user.profile.updated', {
+      this.eventEmitter.emit('user.profile.updated', {
         userId,
         oldCollege,
         newCollege,
@@ -111,8 +112,7 @@ export class UsersService {
 
   private async cacheUserProfile(userId: string, profile: UserProfile) {
     await this.redis.hset(
-      'user:profiles',
-      userId,
+      `user:profile:${userId}`,
       JSON.stringify({
         nickname: profile.nickname,
         college: profile.college ?? College.OTHER,

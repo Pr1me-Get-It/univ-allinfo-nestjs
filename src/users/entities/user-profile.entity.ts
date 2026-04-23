@@ -38,14 +38,14 @@ export class UserProfile {
     enum: College,
     nullable: true,
   })
-  college!: College;
+  college?: College;
 
   @Column({
     type: 'enum',
     enum: Department,
     nullable: true,
   })
-  department!: Department;
+  department?: Department;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;

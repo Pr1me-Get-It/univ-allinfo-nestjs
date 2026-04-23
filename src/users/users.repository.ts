@@ -34,11 +34,9 @@ export class UsersRepository extends Repository<User> {
     });
   }
 
-  /**
-   * 저장은 하지 않아요. 생성만 해요.
-   */
-  createProfile(): UserProfile {
+  createProfile(props: { userId: string }): UserProfile {
     const profile = new UserProfile();
+    profile.userId = props.userId;
     return profile;
   }
 }

@@ -7,7 +7,7 @@ const logDir = path.join(process.cwd(), 'logs');
 try {
   fs.mkdirSync(logDir, { recursive: true });
 } catch (e) {
-  // ignore
+  console.error('Failed to create log directory: ' + e);
 }
 
 const dailyTransport = new DailyRotateFile({
@@ -16,7 +16,7 @@ const dailyTransport = new DailyRotateFile({
   datePattern: 'YYYY-MM-DD',
   zippedArchive: true,
   maxSize: '20m',
-  maxFiles: '30d', // 보관 기간: 30일 (한 달)
+  maxFiles: '30d', // 한 달 보관
   level: 'info',
 });
 
