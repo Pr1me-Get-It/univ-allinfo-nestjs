@@ -29,7 +29,6 @@ export class UserProfile {
   @Column({
     type: 'varchar',
     length: 50,
-    default: 'Anonymous',
     nullable: false,
   })
   nickname!: string;
@@ -37,16 +36,16 @@ export class UserProfile {
   @Column({
     type: 'enum',
     enum: College,
-    nullable: false,
+    nullable: true,
   })
-  college!: College;
+  college?: College;
 
   @Column({
     type: 'enum',
     enum: Department,
-    nullable: false,
+    nullable: true,
   })
-  department!: Department;
+  department?: Department;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;

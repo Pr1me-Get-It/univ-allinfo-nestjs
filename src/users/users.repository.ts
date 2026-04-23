@@ -2,6 +2,7 @@ import { DataSource, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { OauthProvider } from './enums/oauth-provider.enum';
+import { UserProfile } from './entities/user-profile.entity';
 
 @Injectable()
 export class UsersRepository extends Repository<User> {
@@ -23,12 +24,19 @@ export class UsersRepository extends Repository<User> {
     });
   }
 
-  async findByOAuth(
+  async findByOAuthWithProfile(
     provider: OauthProvider,
     providerId: string,
   ): Promise<User | null> {
     return await this.findOne({
       where: { provider, providerId },
+      relations: ['profile'],
     });
+  }
+
+  createProfile(props: { userId: string }): UserProfile {
+    const profile = new UserProfile();
+    profile.userId = props.userId;
+    return profile;
   }
 }

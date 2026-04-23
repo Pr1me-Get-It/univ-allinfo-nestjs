@@ -20,6 +20,7 @@ export enum College {
   SCIENCE_TECHNOLOGY = '과학기술대학',
   ADVANCED_TECHNOLOGY_CONVERGENCE = '첨단기술융합대학',
   FUTURE_INNOVATORS = '자율미래인재학부',
+  OTHER = '기타',
 }
 
 /**
@@ -51,4 +52,5 @@ export const CollegeEnglishNames: Record<College, string> = {
   [College.ADVANCED_TECHNOLOGY_CONVERGENCE]:
     'College of Advanced Technology Convergence',
   [College.FUTURE_INNOVATORS]: 'School of Future Innovators',
+  [College.OTHER]: 'Other',
 };

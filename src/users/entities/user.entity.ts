@@ -11,6 +11,7 @@ import { uuidv7 } from 'uuidv7';
 import { OauthProvider } from '../enums/oauth-provider.enum';
 import { UUIDTransformer } from '../../common/transformers/uuid.transformer';
 import { UserProfile } from './user-profile.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity('users')
 @Unique(['provider', 'providerId'])
@@ -29,6 +30,7 @@ export class User {
   @Column({ type: 'enum', enum: OauthProvider, nullable: false })
   provider!: OauthProvider;
 
+  @Exclude()
   @Column({
     name: 'provider_id',
     type: 'varchar',
@@ -37,6 +39,7 @@ export class User {
   })
   providerId!: string;
 
+  @Exclude()
   @Column({
     name: 'hashed_refresh_token',
     type: 'varchar',
