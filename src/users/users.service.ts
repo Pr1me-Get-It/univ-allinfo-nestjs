@@ -61,4 +61,19 @@ export class UsersService {
       { hashedRefreshToken: hashedRT },
     );
   }
+
+  async updateProfile(
+    userId: string,
+    profileData: Partial<UserProfile>,
+  ): Promise<UserProfile> {
+    const user = await this.usersRepository.findUserWithProfileById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const profile = user.profile || this.usersRepository.createProfile();
+    Object.assign(profile, profileData);
+    await this.usersRepository.save(user);
+    return profile;
+  }
 }

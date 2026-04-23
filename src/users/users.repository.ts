@@ -33,4 +33,12 @@ export class UsersRepository extends Repository<User> {
       relations: ['profile'],
     });
   }
+
+  /**
+   * 저장은 하지 않아요. 생성만 해요.
+   */
+  async createProfile(): Promise<UserProfile> {
+    const profile = new UserProfile();
+    return profile;
+  }
 }

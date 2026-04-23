@@ -26,6 +26,6 @@ export class UsersController {
     @CurrentUser('id') userId: string,
     @Body() profileData: Partial<UserProfile>,
   ) {
-    // Implementation for updating user profile
+    return await this.usersService.updateProfile(userId, profileData);
   }
 }
