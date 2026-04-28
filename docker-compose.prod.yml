@@ -6,7 +6,7 @@ services:
       context: .
     container_name: univallinfo_api_prod
     ports:
-      - '${PUBLIC_PORT:-80}:${PORT:-3000}'
+      - '${PORT:-3000}:${PORT:-3000}'
     env_file:
       - .env
     environment:
