@@ -31,7 +31,7 @@ import { RequestLoggerMiddleware } from './common/middleware/request-logger.midd
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true,
-        synchronize: true, // only local
+        synchronize: false, // only local true
         timezone: '+09:00',
       }),
     }),
