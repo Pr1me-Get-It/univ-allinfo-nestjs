@@ -30,7 +30,7 @@ jobs:
             docker-compose -f docker-compose.prod.yml up --build -d
 
             # 3. 마이그레이션 실행
-            docker-compose -f docker-compose.prod.yml exec -T api npm run migration:run
+            docker-compose -f docker-compose.prod.yml exec -T api npm run migration:run:prod
 
             # 4. 쓸모없는 더미 도커 이미지 청소
             docker image prune -f
