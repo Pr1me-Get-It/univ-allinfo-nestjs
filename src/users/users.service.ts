@@ -112,7 +112,8 @@ export class UsersService {
 
   private async cacheUserProfile(userId: string, profile: UserProfile) {
     await this.redis.hset(
-      `user:profile:${userId}`,
+      'user:profiles',
+      userId,
       JSON.stringify({
         nickname: profile.nickname,
         college: profile.college ?? College.OTHER,
