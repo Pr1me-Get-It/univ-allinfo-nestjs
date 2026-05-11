@@ -12,6 +12,7 @@ import { NoticesModule } from './notices/notices.module';
 import { ScraperModule } from './scraper/scraper.module';
 import { GamesModule } from './games/games.module';
 import { RequestLoggerMiddleware } from './common/middleware/request-logger.middleware';
+import { FeedbacksModule } from './feedbacks/feedbacks.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { RequestLoggerMiddleware } from './common/middleware/request-logger.midd
     NoticesModule,
     ScraperModule,
     GamesModule,
+    FeedbacksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
