@@ -18,11 +18,13 @@ export class FeedbacksService {
     );
   }
 
-  async saveAndSendToWebhook(createFeedbackDto: CreateFeedbackDto) {
+  async saveAndSendToWebhook(
+    createFeedbackDto: CreateFeedbackDto,
+  ): Promise<Feedback> {
     const feedback = this.feedbacksRepository.create(createFeedbackDto);
     const savedFeedback = await this.feedbacksRepository.save(feedback);
 
-    this.sendFeedbackToWebhook(savedFeedback);
+    await this.sendFeedbackToWebhook(savedFeedback);
     return savedFeedback;
   }
 
