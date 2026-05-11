@@ -12,6 +12,6 @@ export class FeedbacksController {
   async create(
     @Body() createFeedbackDto: CreateFeedbackDto,
   ): Promise<Feedback> {
-    return await this.feedbacksService.save(createFeedbackDto.content);
+    return await this.feedbacksService.saveAndSendToWebhook(createFeedbackDto);
   }
 }
