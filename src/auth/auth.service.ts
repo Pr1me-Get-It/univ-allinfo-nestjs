@@ -12,6 +12,7 @@ import { ConfigService } from '@nestjs/config';
 import { HumanReadableTime } from '@src/common/types';
 import appleSignin from 'apple-signin-auth';
 import { OauthProvider } from '@src/users/enums/oauth-provider.enum';
+import { LoginResponseDto } from './dto/login-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -30,7 +31,7 @@ export class AuthService {
   async appleLogin(token: string, authorizationCode: string) {
     try {
       const decoded = await appleSignin.verifyIdToken(token, {
-        audience: this.configService.get<string>('APPLE_WEB_CLIENT_ID'),
+        audience: this.configService.get<string>('APPLE_CLIENT_ID'),
         ignoreExpiration: false,
       });
 
@@ -41,7 +42,9 @@ export class AuthService {
         clientID: this.configService.get<string>('APPLE_CLIENT_ID')!,
         teamID: this.configService.get<string>('APPLE_TEAM_ID')!,
         keyIdentifier: this.configService.get<string>('APPLE_KEY_ID')!,
-        privateKey: this.configService.get<string>('APPLE_PRIVATE_KEY')!,
+        privateKey: this.configService
+          .get<string>('APPLE_PRIVATE_KEY')!
+          .replace(/\\n/g, '\n'),
       });
 
       const tokenResponse = await appleSignin.getAuthorizationToken(
@@ -60,7 +63,12 @@ export class AuthService {
         appleRefreshToken,
       );
 
-      return { ...(await this.generateTokenAndUpdateRTR(user.id)), user: user };
+      const tokens = await this.generateTokenAndUpdateRTR(user.id);
+      return new LoginResponseDto(
+        tokens.accessToken,
+        tokens.refreshToken,
+        user,
+      );
     } catch (error) {
       throw new UnauthorizedException(
         '애플 로그인 토큰이 유효하지 않거나 위조되었습니다.',
@@ -85,7 +93,8 @@ export class AuthService {
       payload?.email,
     );
 
-    return { ...(await this.generateTokenAndUpdateRTR(user.id)), user: user };
+    const tokens = await this.generateTokenAndUpdateRTR(user.id);
+    return new LoginResponseDto(tokens.accessToken, tokens.refreshToken, user);
   }
 
   async refreshTokens(userId: string, incomingRefreshToken: string) {
@@ -133,7 +142,9 @@ export class AuthService {
         clientID: this.configService.get<string>('APPLE_CLIENT_ID')!,
         teamID: this.configService.get<string>('APPLE_TEAM_ID')!,
         keyIdentifier: this.configService.get<string>('APPLE_KEY_ID')!,
-        privateKey: this.configService.get<string>('APPLE_PRIVATE_KEY')!,
+        privateKey: this.configService
+          .get<string>('APPLE_PRIVATE_KEY')!
+          .replace(/\\n/g, '\n'),
       });
 
       await appleSignin.revokeAuthorizationToken(

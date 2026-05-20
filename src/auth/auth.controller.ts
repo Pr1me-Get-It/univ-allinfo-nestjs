@@ -10,6 +10,7 @@ import {
 import { AuthService } from './auth.service';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { JwtGuard } from './guards/jwt.guard';
+import { LoginResponseDto } from './dto/login-response.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -19,12 +20,14 @@ export class AuthController {
   async appleLogin(
     @Body('idToken') idToken: string,
     @Body('authorizationCode') authorizationCode: string,
-  ) {
+  ): Promise<LoginResponseDto> {
     return await this.authService.appleLogin(idToken, authorizationCode);
   }
 
   @Post('google')
-  async googleAuth(@Body('idToken') idToken: string) {
+  async googleAuth(
+    @Body('idToken') idToken: string,
+  ): Promise<LoginResponseDto> {
     return await this.authService.googleLogin(idToken);
   }
 

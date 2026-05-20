@@ -37,7 +37,8 @@ export class UsersRepository extends Repository<User> {
   async findUserWithAppleRTById(id: string): Promise<User | null> {
     return this.findOne({
       where: { id },
-      select: ['id', 'email', 'provider', 'providerId', 'appleRefreshToken'],
+      select: ['id', 'email', 'provider', 'providerId'],
+      relations: ['appleRefreshToken'],
     });
   }
 

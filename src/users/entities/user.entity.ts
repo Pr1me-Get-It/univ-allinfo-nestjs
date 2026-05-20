@@ -57,6 +57,7 @@ export class User {
   @OneToOne(() => UserProfile, (profile) => profile.user, { cascade: true })
   profile?: UserProfile;
 
+  @Exclude()
   @OneToOne(
     () => UserAppleRefreshToken,
     (appleRefreshToken) => appleRefreshToken.user,
