@@ -17,6 +17,7 @@ import { LoginResponseDto } from './dto/login-response.dto';
 @Injectable()
 export class AuthService {
   private googleClient: OAuth2Client;
+  private appleSecretClient: string;
 
   constructor(
     private readonly userService: UsersService,
@@ -26,6 +27,14 @@ export class AuthService {
     this.googleClient = new OAuth2Client(
       this.configService.get<string>('GOOGLE_WEB_CLIENT_ID'),
     );
+    this.appleSecretClient = appleSignin.getClientSecret({
+      clientID: this.configService.get<string>('APPLE_CLIENT_ID')!,
+      teamID: this.configService.get<string>('APPLE_TEAM_ID')!,
+      keyIdentifier: this.configService.get<string>('APPLE_KEY_ID')!,
+      privateKey: this.configService
+        .get<string>('APPLE_PRIVATE_KEY')!
+        .replace(/\\n/g, '\n'),
+    });
   }
 
   async appleLogin(token: string, authorizationCode: string) {
@@ -38,20 +47,11 @@ export class AuthService {
       const appleUserId = decoded.sub;
       const email = decoded.email;
 
-      const clientSecret = appleSignin.getClientSecret({
-        clientID: this.configService.get<string>('APPLE_CLIENT_ID')!,
-        teamID: this.configService.get<string>('APPLE_TEAM_ID')!,
-        keyIdentifier: this.configService.get<string>('APPLE_KEY_ID')!,
-        privateKey: this.configService
-          .get<string>('APPLE_PRIVATE_KEY')!
-          .replace(/\\n/g, '\n'),
-      });
-
       const tokenResponse = await appleSignin.getAuthorizationToken(
         authorizationCode,
         {
           clientID: this.configService.get<string>('APPLE_CLIENT_ID')!,
-          clientSecret: clientSecret,
+          clientSecret: this.appleSecretClient,
           redirectUri: '', // 에러 방지용 더미 데이터
         },
       );
@@ -138,20 +138,11 @@ export class AuthService {
     }
 
     if (user.appleRefreshToken) {
-      const clientSecret = appleSignin.getClientSecret({
-        clientID: this.configService.get<string>('APPLE_CLIENT_ID')!,
-        teamID: this.configService.get<string>('APPLE_TEAM_ID')!,
-        keyIdentifier: this.configService.get<string>('APPLE_KEY_ID')!,
-        privateKey: this.configService
-          .get<string>('APPLE_PRIVATE_KEY')!
-          .replace(/\\n/g, '\n'),
-      });
-
       await appleSignin.revokeAuthorizationToken(
         user.appleRefreshToken.appleRefreshToken,
         {
           clientID: this.configService.get<string>('APPLE_CLIENT_ID')!,
-          clientSecret: clientSecret,
+          clientSecret: this.appleSecretClient,
           tokenTypeHint: 'refresh_token',
         },
       );
