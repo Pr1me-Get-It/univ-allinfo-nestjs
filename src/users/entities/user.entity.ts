@@ -12,6 +12,7 @@ import { OauthProvider } from '../enums/oauth-provider.enum';
 import { UUIDTransformer } from '../../common/transformers/uuid.transformer';
 import { UserProfile } from './user-profile.entity';
 import { Exclude } from 'class-transformer';
+import { UserAppleRefreshToken } from './user-apple-rt.entity';
 
 @Entity('users')
 @Unique(['provider', 'providerId'])
@@ -55,6 +56,14 @@ export class User {
   // UserProfile과 1:1 관계 설정
   @OneToOne(() => UserProfile, (profile) => profile.user, { cascade: true })
   profile?: UserProfile;
+
+  @Exclude()
+  @OneToOne(
+    () => UserAppleRefreshToken,
+    (appleRefreshToken) => appleRefreshToken.user,
+    { cascade: true, nullable: true },
+  )
+  appleRefreshToken?: UserAppleRefreshToken | null;
 
   @BeforeInsert()
   generateId() {

@@ -34,6 +34,14 @@ export class UsersRepository extends Repository<User> {
     });
   }
 
+  async findUserWithAppleRTById(id: string): Promise<User | null> {
+    return this.findOne({
+      where: { id },
+      select: ['id', 'email', 'provider', 'providerId'],
+      relations: ['appleRefreshToken'],
+    });
+  }
+
   createProfile(props: { userId: string }): UserProfile {
     const profile = new UserProfile();
     profile.userId = props.userId;

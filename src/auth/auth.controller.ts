@@ -10,19 +10,24 @@ import {
 import { AuthService } from './auth.service';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { JwtGuard } from './guards/jwt.guard';
+import { LoginResponseDto } from './dto/login-response.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get('test')
-  @UseGuards(JwtGuard)
-  async test() {
-    return { message: 'Auth endpoints are working!' };
+  @Post('apple')
+  async appleLogin(
+    @Body('idToken') idToken: string,
+    @Body('authorizationCode') authorizationCode: string,
+  ): Promise<LoginResponseDto> {
+    return await this.authService.appleLogin(idToken, authorizationCode);
   }
 
   @Post('google')
-  async googleAuth(@Body('idToken') idToken: string) {
+  async googleAuth(
+    @Body('idToken') idToken: string,
+  ): Promise<LoginResponseDto> {
     return await this.authService.googleLogin(idToken);
   }
 
@@ -31,6 +36,13 @@ export class AuthController {
   async refreshTokens(@Req() req, @Body('refreshToken') refreshToken: string) {
     const userId = req.user.sub;
     return await this.authService.refreshTokens(userId, refreshToken);
+  }
+
+  @Delete('apple')
+  @UseGuards(JwtGuard)
+  async deleteAppleUser(@Req() req) {
+    const userId = req.user.sub;
+    return await this.authService.deleteAppleUser(userId);
   }
 
   @Delete('withdraw')

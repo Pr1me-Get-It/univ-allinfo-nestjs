@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { OauthProvider } from './enums/oauth-provider.enum';
 import { UsersRepository } from './users.repository';
@@ -31,11 +35,49 @@ export class UsersService {
     return this.usersRepository.findUserWithRefreshToken(id);
   }
 
+  async findUserWithAppleRTById(id: string): Promise<User | null> {
+    return this.usersRepository.findUserWithAppleRTById(id);
+  }
+
   async deleteById(id: string): Promise<void> {
     const result = await this.usersRepository.delete({ id });
     if (result.affected === 0) {
       throw new NotFoundException('User not found');
     }
+  }
+
+  async findOrCreateAppleUser(
+    providerId: string,
+    email: string,
+    appleRefreshToken?: string,
+  ) {
+    let user = await this.usersRepository.findByOAuthWithProfile(
+      OauthProvider.APPLE,
+      providerId,
+    );
+
+    if (!user) {
+      if (!appleRefreshToken) {
+        throw new BadRequestException('Apple refresh token not found');
+      }
+      user = this.usersRepository.create({
+        email,
+        provider: OauthProvider.APPLE,
+        providerId,
+        profile: {
+          nickname: NicknameUtil.generateRandomNickname(),
+        },
+        appleRefreshToken: {
+          appleRefreshToken,
+        },
+      });
+      user = await this.usersRepository.save(user);
+    }
+
+    if (user.profile) {
+      await this.cacheUserProfile(user.id, user.profile);
+    }
+    return user;
   }
 
   async findOrCreateGoogleUser(

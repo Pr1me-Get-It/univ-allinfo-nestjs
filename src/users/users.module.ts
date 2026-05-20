@@ -4,12 +4,13 @@ import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserProfile } from './entities/user-profile.entity';
 import { User } from './entities/user.entity';
+import { UserAppleRefreshToken } from './entities/user-apple-rt.entity';
 import { UsersRepository } from './users.repository';
 import { AuthModule } from '@src/auth/auth.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, UserProfile]),
+    TypeOrmModule.forFeature([User, UserProfile, UserAppleRefreshToken]),
     forwardRef(() => AuthModule),
   ],
   controllers: [UsersController],
