@@ -15,10 +15,12 @@ import { JwtGuard } from './guards/jwt.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get('test')
-  @UseGuards(JwtGuard)
-  async test() {
-    return { message: 'Auth endpoints are working!' };
+  @Post('apple')
+  async appleLogin(
+    @Body('idToken') idToken: string,
+    @Body('authorizationCode') authorizationCode: string,
+  ) {
+    return await this.authService.appleLogin(idToken, authorizationCode);
   }
 
   @Post('google')
@@ -31,6 +33,13 @@ export class AuthController {
   async refreshTokens(@Req() req, @Body('refreshToken') refreshToken: string) {
     const userId = req.user.sub;
     return await this.authService.refreshTokens(userId, refreshToken);
+  }
+
+  @Delete('apple')
+  @UseGuards(JwtGuard)
+  async deleteAppleUser(@Req() req) {
+    const userId = req.user.sub;
+    return await this.authService.deleteAppleUser(userId);
   }
 
   @Delete('withdraw')
