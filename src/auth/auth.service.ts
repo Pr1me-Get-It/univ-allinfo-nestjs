@@ -6,7 +6,6 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
-import * as qs from 'qs';
 import { UsersService } from '@src/users/users.service';
 import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
@@ -14,7 +13,6 @@ import { HumanReadableTime } from '@src/common/types';
 import appleSignin from 'apple-signin-auth';
 import { OauthProvider } from '@src/users/enums/oauth-provider.enum';
 import { LoginResponseDto } from './dto/login-response.dto';
-import axios from 'axios';
 
 @Injectable()
 export class AuthService {
@@ -32,20 +30,13 @@ export class AuthService {
 
   async appleLogin(token: string, authorizationCode: string) {
     try {
-      console.log('[AuthService][appleLogin] 시작 - 토큰 검증 시도');
       const decoded = await appleSignin.verifyIdToken(token, {
         audience: this.configService.get<string>('APPLE_CLIENT_ID'),
         ignoreExpiration: false,
       });
 
-      console.log('[AuthService][appleLogin] verifyIdToken 결과:', decoded);
       const appleUserId = decoded.sub;
       const email = decoded.email;
-
-      console.log(
-        '[AuthService][appleLogin] authorizationCode 수신 여부:',
-        !!authorizationCode,
-      );
 
       const tokenResponse = await appleSignin.getAuthorizationToken(
         authorizationCode,
@@ -57,10 +48,6 @@ export class AuthService {
       );
 
       const appleRefreshToken = tokenResponse.refresh_token;
-      console.log(
-        '[AuthService][appleLogin] getAuthorizationToken 결과:',
-        tokenResponse && { hasRefresh: !!appleRefreshToken },
-      );
 
       const user = await this.userService.findOrCreateAppleUser(
         appleUserId,
@@ -75,10 +62,6 @@ export class AuthService {
         user,
       );
     } catch (error: any) {
-      console.error(
-        '[AuthService][appleLogin] 애플 로그인 중 예외 발생:',
-        error,
-      );
       console.error('[AuthService][appleLogin] 에러 메시지:', error?.message);
       throw new UnauthorizedException(
         '애플 로그인 토큰이 유효하지 않거나 위조되었습니다.',
@@ -95,10 +78,6 @@ export class AuthService {
 
     const payload = ticket.getPayload();
     if (!payload || !payload.sub || !payload.email) {
-      console.error(
-        '[AuthService][googleLogin] Invalid Google ID token payload:',
-        payload,
-      );
       throw new UnauthorizedException('Invalid Google ID token');
     }
 
@@ -114,11 +93,6 @@ export class AuthService {
   async refreshTokens(userId: string, incomingRefreshToken: string) {
     const user = await this.userService.findByIdWithRefreshToken(userId);
     if (!user || !user.hashedRefreshToken) {
-      console.error('[AuthService][refreshTokens] 유저 없음 또는 RT 미설정:', {
-        userId,
-        userExists: !!user,
-        hasRT: !!user?.hashedRefreshToken,
-      });
       throw new UnauthorizedException('User not found or no refresh token set');
     }
 
@@ -134,9 +108,6 @@ export class AuthService {
     );
 
     if (!isMatch) {
-      console.error('[AuthService][refreshTokens] 리프레시 토큰 불일치:', {
-        userId,
-      });
       await this.userService.updateHashedRefreshToken(userId, null);
       throw new UnauthorizedException('Invalid refresh token');
     }
@@ -162,10 +133,6 @@ export class AuthService {
     }
 
     if (user.provider !== OauthProvider.APPLE) {
-      console.error('[AuthService][deleteAppleUser] Apple 사용자가 아님:', {
-        userId,
-        provider: user.provider,
-      });
       throw new UnauthorizedException('User is not an Apple user');
     }
 
