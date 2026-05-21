@@ -6,6 +6,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
+import * as qs from 'qs';
 import { UsersService } from '@src/users/users.service';
 import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
@@ -13,6 +14,7 @@ import { HumanReadableTime } from '@src/common/types';
 import appleSignin from 'apple-signin-auth';
 import { OauthProvider } from '@src/users/enums/oauth-provider.enum';
 import { LoginResponseDto } from './dto/login-response.dto';
+import axios from 'axios';
 
 @Injectable()
 export class AuthService {
@@ -53,18 +55,34 @@ export class AuthService {
         '[AuthService][appleLogin] authorizationCode 수신 여부:',
         !!authorizationCode,
       );
-      const tokenResponse = await appleSignin.getAuthorizationToken(
-        authorizationCode,
+
+      // const tokenResponse = await appleSignin.getAuthorizationToken(
+      //   authorizationCode,
+      //   {
+      //     clientID: this.configService.get<string>('APPLE_CLIENT_ID')!,
+      //     clientSecret: this.appleSecretClient,
+      //     redirectUri: '', // 에러 방지용 더미 데이터
+      //   },
+      // );
+
+      const response = await axios.post(
+        'https://appleid.apple.com/auth/token',
+        qs.stringify({
+          grant_type: 'authorization_code',
+          code: authorizationCode,
+          client_id: this.configService.get<string>('APPLE_CLIENT_ID'),
+          client_secret: this.appleSecretClient,
+        }),
         {
-          clientID: this.configService.get<string>('APPLE_CLIENT_ID')!,
-          clientSecret: this.appleSecretClient,
-          redirectUri: '', // 에러 방지용 더미 데이터
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
         },
       );
-      const appleRefreshToken = tokenResponse.refresh_token;
+      const appleRefreshToken = response.data.refresh_token;
       console.log(
         '[AuthService][appleLogin] getAuthorizationToken 결과:',
-        tokenResponse && { hasRefresh: !!appleRefreshToken },
+        response.data && { hasRefresh: !!appleRefreshToken },
       );
 
       const user = await this.userService.findOrCreateAppleUser(
