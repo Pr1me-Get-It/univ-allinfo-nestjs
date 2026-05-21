@@ -38,13 +38,6 @@ export class AuthController {
     return await this.authService.refreshTokens(userId, refreshToken);
   }
 
-  @Delete('apple')
-  @UseGuards(JwtGuard)
-  async deleteAppleUser(@Req() req) {
-    const userId = req.user.sub;
-    return await this.authService.deleteAppleUser(userId);
-  }
-
   @Delete('withdraw')
   @UseGuards(JwtGuard)
   async withdraw(@Req() req) {
