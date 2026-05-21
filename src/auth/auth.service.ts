@@ -19,7 +19,6 @@ import axios from 'axios';
 @Injectable()
 export class AuthService {
   private googleClient: OAuth2Client;
-  private appleSecretClient: string;
 
   constructor(
     private readonly userService: UsersService,
@@ -29,14 +28,6 @@ export class AuthService {
     this.googleClient = new OAuth2Client(
       this.configService.get<string>('GOOGLE_WEB_CLIENT_ID'),
     );
-    this.appleSecretClient = appleSignin.getClientSecret({
-      clientID: this.configService.get<string>('APPLE_CLIENT_ID')!,
-      teamID: this.configService.get<string>('APPLE_TEAM_ID')!,
-      keyIdentifier: this.configService.get<string>('APPLE_KEY_ID')!,
-      privateKey: this.configService
-        .get<string>('APPLE_PRIVATE_KEY')!
-        .replace(/\\n/g, '\n'),
-    });
   }
 
   async appleLogin(token: string, authorizationCode: string) {
@@ -56,33 +47,35 @@ export class AuthService {
         !!authorizationCode,
       );
 
-      // const tokenResponse = await appleSignin.getAuthorizationToken(
-      //   authorizationCode,
-      //   {
-      //     clientID: this.configService.get<string>('APPLE_CLIENT_ID')!,
-      //     clientSecret: this.appleSecretClient,
-      //     redirectUri: '', // 에러 방지용 더미 데이터
-      //   },
-      // );
-
-      const response = await axios.post(
-        'https://appleid.apple.com/auth/token',
-        qs.stringify({
-          grant_type: 'authorization_code',
-          code: authorizationCode,
-          client_id: this.configService.get<string>('APPLE_CLIENT_ID'),
-          client_secret: this.appleSecretClient,
-        }),
+      const tokenResponse = await appleSignin.getAuthorizationToken(
+        authorizationCode,
         {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
+          clientID: this.configService.get<string>('APPLE_CLIENT_ID')!,
+          clientSecret: await this.GetAppleSecretClient(),
+          redirectUri: '', // 에러 방지용 더미 데이터
         },
       );
-      const appleRefreshToken = response.data.refresh_token;
+
+      // const tokenResponse = (
+      //   await axios.post(
+      //     'https://appleid.apple.com/auth/token',
+      //     qs.stringify({
+      //       grant_type: 'authorization_code',
+      //       code: authorizationCode,
+      //       client_id: this.configService.get<string>('APPLE_CLIENT_ID'),
+      //       client_secret: await this.GetAppleSecretClient(),
+      //     }),
+      //     {
+      //       headers: {
+      //         'Content-Type': 'application/x-www-form-urlencoded',
+      //       },
+      //     },
+      //   )
+      // ).data;
+      const appleRefreshToken = tokenResponse.refresh_token;
       console.log(
         '[AuthService][appleLogin] getAuthorizationToken 결과:',
-        response.data && { hasRefresh: !!appleRefreshToken },
+        tokenResponse && { hasRefresh: !!appleRefreshToken },
       );
 
       const user = await this.userService.findOrCreateAppleUser(
@@ -191,7 +184,7 @@ export class AuthService {
         user.appleRefreshToken.appleRefreshToken,
         {
           clientID: this.configService.get<string>('APPLE_CLIENT_ID')!,
-          clientSecret: this.appleSecretClient,
+          clientSecret: await this.GetAppleSecretClient(),
           tokenTypeHint: 'refresh_token',
         },
       );
@@ -226,5 +219,16 @@ export class AuthService {
     await this.userService.updateHashedRefreshToken(userId, hashedRT);
 
     return { accessToken, refreshToken };
+  }
+
+  private async GetAppleSecretClient(): Promise<string> {
+    return appleSignin.getClientSecret({
+      clientID: this.configService.get<string>('APPLE_CLIENT_ID')!,
+      teamID: this.configService.get<string>('APPLE_TEAM_ID')!,
+      keyIdentifier: this.configService.get<string>('APPLE_KEY_ID')!,
+      privateKey: this.configService
+        .get<string>('APPLE_PRIVATE_KEY')!
+        .replace(/\\n/g, '\n'),
+    });
   }
 }
