@@ -56,22 +56,6 @@ export class AuthService {
         },
       );
 
-      // const tokenResponse = (
-      //   await axios.post(
-      //     'https://appleid.apple.com/auth/token',
-      //     qs.stringify({
-      //       grant_type: 'authorization_code',
-      //       code: authorizationCode,
-      //       client_id: this.configService.get<string>('APPLE_CLIENT_ID'),
-      //       client_secret: await this.GetAppleSecretClient(),
-      //     }),
-      //     {
-      //       headers: {
-      //         'Content-Type': 'application/x-www-form-urlencoded',
-      //       },
-      //     },
-      //   )
-      // ).data;
       const appleRefreshToken = tokenResponse.refresh_token;
       console.log(
         '[AuthService][appleLogin] getAuthorizationToken 결과:',
@@ -161,11 +145,17 @@ export class AuthService {
   }
 
   async withdraw(userId: string) {
+    const user = await this.userService.findById(userId);
+    if (user?.provider === OauthProvider.APPLE) {
+      await this.deleteAppleUser(userId);
+      return { message: 'Apple user account deleted successfully' };
+    }
+
     await this.userService.deleteById(userId);
     return { message: 'User account deleted successfully' };
   }
 
-  async deleteAppleUser(userId: string) {
+  private async deleteAppleUser(userId: string) {
     const user = await this.userService.findUserWithAppleRTById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
