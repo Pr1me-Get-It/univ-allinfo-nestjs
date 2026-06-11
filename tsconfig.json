@@ -24,7 +24,7 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "types": ["node", "jest"],
-    "strictPropertyInitialization": true
+    "strictPropertyInitialization": false
   },
   "watchOptions": {
     "watchFile": "dynamicPriorityPolling",
