@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   OneToOne,
   PrimaryColumn,
   Unique,
@@ -13,6 +14,7 @@ import { UUIDTransformer } from '../../common/transformers/uuid.transformer';
 import { UserProfile } from './user-profile.entity';
 import { Exclude } from 'class-transformer';
 import { UserAppleRefreshToken } from './user-apple-rt.entity';
+import { ExpoToken } from '@src/notifications/entities/expo-token.entity';
 
 @Entity('users')
 @Unique(['provider', 'providerId'])
@@ -64,6 +66,12 @@ export class User {
     { cascade: true, nullable: true },
   )
   appleRefreshToken?: UserAppleRefreshToken | null;
+
+  @OneToMany(() => ExpoToken, (expoToken) => expoToken.user, {
+    cascade: true,
+    nullable: true,
+  })
+  expoTokens?: ExpoToken[] | null;
 
   @BeforeInsert()
   generateId() {
