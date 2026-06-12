@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { JwtGuard } from '@src/auth/guards/jwt.guard';
 import { CurrentUser } from '@src/auth/decorators/current-user.decorator';
@@ -7,10 +7,23 @@ import { CurrentUser } from '@src/auth/decorators/current-user.decorator';
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
-  @Get('test')
+  @Post('expo-token')
   @UseGuards(JwtGuard)
-  async sendTestNotification(@CurrentUser('id') userId: string) {
-    await this.notificationsService.sendTestNotification(userId);
-    return HttpStatus.OK;
+  async saveExpoToken(
+    @CurrentUser('id') userId: string,
+    @Body('expoPushToken') expoPushToken: string,
+  ) {
+    await this.notificationsService.saveExpoToken(userId, expoPushToken);
+    return HttpStatus.CREATED;
+  }
+
+  @Post('keyword')
+  @UseGuards(JwtGuard)
+  async addKeywords(
+    @CurrentUser('id') userId: string,
+    @Body('keywords') keywords: string[],
+  ) {
+    await this.notificationsService.saveKeywords(userId, keywords);
+    return HttpStatus.CREATED;
   }
 }
