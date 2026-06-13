@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   OneToOne,
   PrimaryColumn,
   Unique,
@@ -13,6 +14,9 @@ import { UUIDTransformer } from '../../common/transformers/uuid.transformer';
 import { UserProfile } from './user-profile.entity';
 import { Exclude } from 'class-transformer';
 import { UserAppleRefreshToken } from './user-apple-rt.entity';
+import { ExpoToken } from '@src/notifications/entities/expo-token.entity';
+import { SourceSubscription } from '@src/notifications/entities/source-subscription.entity';
+import { KeywordSubscription } from '@src/notifications/entities/keyword-subscriptions.entity';
 
 @Entity('users')
 @Unique(['provider', 'providerId'])
@@ -64,6 +68,26 @@ export class User {
     { cascade: true, nullable: true },
   )
   appleRefreshToken?: UserAppleRefreshToken | null;
+
+  @OneToMany(() => ExpoToken, (expoToken) => expoToken.user, {
+    cascade: true,
+    nullable: true,
+  })
+  expoTokens?: ExpoToken[] | null;
+
+  @OneToMany(
+    () => SourceSubscription,
+    (sourceSubscription) => sourceSubscription.user,
+    { cascade: true, nullable: true },
+  )
+  sourceSubscriptions?: SourceSubscription[] | null;
+
+  @OneToMany(
+    () => KeywordSubscription,
+    (keywordSubscription) => keywordSubscription.user,
+    { cascade: true, nullable: true },
+  )
+  keywordSubscriptions?: KeywordSubscription[] | null;
 
   @BeforeInsert()
   generateId() {

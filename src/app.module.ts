@@ -13,6 +13,7 @@ import { ScraperModule } from './scraper/scraper.module';
 import { GamesModule } from './games/games.module';
 import { RequestLoggerMiddleware } from './common/middleware/request-logger.middleware';
 import { FeedbacksModule } from './feedbacks/feedbacks.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { FeedbacksModule } from './feedbacks/feedbacks.module';
     ScraperModule,
     GamesModule,
     FeedbacksModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
