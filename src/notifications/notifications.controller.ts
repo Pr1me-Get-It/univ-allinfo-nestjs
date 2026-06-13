@@ -16,7 +16,7 @@ export class NotificationsController {
     await this.notificationsService.saveExpoToken(userId, expoPushToken);
   }
 
-  @Post('keyword')
+  @Post('keywords')
   @UseGuards(JwtGuard)
   async addKeywords(
     @CurrentUser('id') userId: string,
@@ -25,7 +25,7 @@ export class NotificationsController {
     return await this.notificationsService.saveKeywords(userId, keywords);
   }
 
-  @Delete('keyword')
+  @Delete('keywords')
   @UseGuards(JwtGuard)
   async deleteKeywords(
     @CurrentUser('id') userId: string,
@@ -34,7 +34,7 @@ export class NotificationsController {
     return await this.notificationsService.deleteKeywords(userId, keywords);
   }
 
-  @Post('source')
+  @Post('sources')
   @UseGuards(JwtGuard)
   async addSources(
     @CurrentUser('id') userId: string,
@@ -43,7 +43,7 @@ export class NotificationsController {
     return await this.notificationsService.saveSources(userId, sources);
   }
 
-  @Delete('source')
+  @Delete('sources')
   @UseGuards(JwtGuard)
   async deleteSources(
     @CurrentUser('id') userId: string,
