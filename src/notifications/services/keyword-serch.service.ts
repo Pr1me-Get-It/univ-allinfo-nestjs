@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import AhoCorasick from 'modern-ahocorasick';
-import { KeywordSubscriptionsRepository } from './notifications.repository';
+import { KeywordSubscriptionsRepository } from '../notifications.repository';
 
 @Injectable()
 export class KeywordSearchService implements OnModuleInit {
@@ -20,6 +20,7 @@ export class KeywordSearchService implements OnModuleInit {
     const distinctKeywords =
       await this.keywordSubscriptionsRepository.findDistinctKeywords();
     this.currentKeywords = new Set<string>(distinctKeywords);
+    await this.buildAutomaton();
   }
 
   async addKeywords(newKeywords: string[]) {
@@ -38,6 +39,18 @@ export class KeywordSearchService implements OnModuleInit {
     }
 
     await this.buildAutomaton();
+  }
+
+  search(text: string): string[] {
+    if (!this.activeAutomaton) return [];
+    const matches = this.activeAutomaton.search(text);
+    const found = new Set<string>();
+    for (const [, keywords] of matches) {
+      for (const keyword of keywords) {
+        found.add(keyword);
+      }
+    }
+    return Array.from(found);
   }
 
   private async buildAutomaton() {
@@ -60,7 +73,7 @@ export class KeywordSearchService implements OnModuleInit {
     }
   }
 
-  private buildTrieAsync(keywords: string[]): Promise<AhoCorasick> {
+  private async buildTrieAsync(keywords: string[]): Promise<AhoCorasick> {
     return new Promise((resolve) => {
       const ac = new AhoCorasick(keywords);
       resolve(ac);

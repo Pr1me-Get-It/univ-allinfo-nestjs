@@ -1,5 +1,5 @@
-import { Body, Controller, HttpStatus, Post, UseGuards } from '@nestjs/common';
-import { NotificationsService } from './notifications.service';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { NotificationsService } from './services/notifications.service';
 import { JwtGuard } from '@src/auth/guards/jwt.guard';
 import { CurrentUser } from '@src/auth/decorators/current-user.decorator';
 
@@ -14,7 +14,6 @@ export class NotificationsController {
     @Body('expoPushToken') expoPushToken: string,
   ) {
     await this.notificationsService.saveExpoToken(userId, expoPushToken);
-    return HttpStatus.CREATED;
   }
 
   @Post('keyword')
@@ -23,7 +22,15 @@ export class NotificationsController {
     @CurrentUser('id') userId: string,
     @Body('keywords') keywords: string[],
   ) {
-    await this.notificationsService.saveKeywords(userId, keywords);
-    return HttpStatus.CREATED;
+    return await this.notificationsService.saveKeywords(userId, keywords);
+  }
+
+  @Post('source')
+  @UseGuards(JwtGuard)
+  async addSources(
+    @CurrentUser('id') userId: string,
+    @Body('sources') sources: string[],
+  ) {
+    return await this.notificationsService.saveSources(userId, sources);
   }
 }

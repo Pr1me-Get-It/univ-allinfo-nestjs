@@ -5,14 +5,17 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
 @Entity('expo_tokens')
 export class ExpoToken {
-  @PrimaryColumn({
+  @PrimaryGeneratedColumn({ name: 'id', type: 'bigint', unsigned: true })
+  id!: number;
+
+  @Column({
     name: 'user_id',
     type: 'binary',
     length: 16,
@@ -37,14 +40,10 @@ export class ExpoToken {
   })
   isActive!: boolean;
 
-  @CreateDateColumn({
-    name: 'created_at',
-  })
+  @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 
-  @UpdateDateColumn({
-    name: 'updated_at',
-  })
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt!: Date;
 
   @ManyToOne(() => User, (user) => user.expoTokens, {

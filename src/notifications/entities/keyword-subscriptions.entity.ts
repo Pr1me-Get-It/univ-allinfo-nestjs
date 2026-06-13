@@ -5,13 +5,22 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
 @Entity('keyword_subscriptions')
+@Unique(['userId', 'keyword'])
 export class KeywordSubscription {
-  @PrimaryColumn({
+  @PrimaryGeneratedColumn({
+    name: 'id',
+    type: 'bigint',
+    unsigned: true,
+  })
+  id!: number;
+
+  @Column({
     name: 'user_id',
     type: 'binary',
     length: 16,
