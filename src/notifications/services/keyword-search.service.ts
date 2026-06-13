@@ -76,9 +76,12 @@ export class KeywordSearchService implements OnModuleInit {
     this.hasPendingUpdate = false;
 
     try {
-      this.activeAutomaton = await this.buildTrieAsync(
-        Array.from(this.keywordRefCounts.keys()),
-      );
+      const keywords = Array.from(this.keywordRefCounts.keys());
+      if (keywords.length === 0) {
+        this.activeAutomaton = null;
+        return;
+      }
+      this.activeAutomaton = await this.buildTrieAsync(keywords);
     } finally {
       this.isBuilding = false;
 
