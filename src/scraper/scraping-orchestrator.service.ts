@@ -31,8 +31,8 @@ export class ScrapingOrchestratorService {
     try {
       const CONCURRENCY = 3;
       const tasks = this.scrapeConfigs.flatMap((config) =>
-        config.boards.map((board) => () =>
-          this.scraperService.scrapeBoard(config, board),
+        config.boards.map(
+          (board) => () => this.scraperService.scrapeBoard(config, board),
         ),
       );
 
