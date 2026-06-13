@@ -4,35 +4,53 @@ import { KeywordSubscriptionsRepository } from '../notifications.repository';
 
 @Injectable()
 export class KeywordSearchService implements OnModuleInit {
-  private isBuilding!: boolean;
+  private isBuilding = false;
   private activeAutomaton: AhoCorasick | null = null;
-  private hasPendingUpdate!: boolean;
-  private currentKeywords!: Set<string>;
+  private hasPendingUpdate = false;
+  private keywordRefCounts = new Map<string, number>();
 
   constructor(
     private readonly keywordSubscriptionsRepository: KeywordSubscriptionsRepository,
-  ) {
-    this.isBuilding = false;
-    this.hasPendingUpdate = false;
-  }
+  ) {}
 
   async onModuleInit() {
-    const distinctKeywords =
-      await this.keywordSubscriptionsRepository.findDistinctKeywords();
-    this.currentKeywords = new Set<string>(distinctKeywords);
+    this.keywordRefCounts =
+      await this.keywordSubscriptionsRepository.findKeywordCounts();
     await this.buildAutomaton();
   }
 
   async addKeywords(newKeywords: string[]) {
-    const initialSize = this.currentKeywords.size;
-
+    let hasNew = false;
     for (const keyword of newKeywords) {
-      this.currentKeywords.add(keyword);
+      const prev = this.keywordRefCounts.get(keyword) ?? 0;
+      this.keywordRefCounts.set(keyword, prev + 1);
+      if (prev === 0) hasNew = true;
     }
 
-    if (initialSize === this.currentKeywords.size) {
+    if (!hasNew) return;
+    if (this.isBuilding) {
+      this.hasPendingUpdate = true;
       return;
     }
+
+    await this.buildAutomaton();
+  }
+
+  async deleteKeywords(keywords: string[]) {
+    let hasRemoved = false;
+    for (const keyword of keywords) {
+      const prev = this.keywordRefCounts.get(keyword);
+      if (prev === undefined) continue;
+
+      if (prev <= 1) {
+        this.keywordRefCounts.delete(keyword);
+        hasRemoved = true;
+      } else {
+        this.keywordRefCounts.set(keyword, prev - 1);
+      }
+    }
+
+    if (!hasRemoved) return;
     if (this.isBuilding) {
       this.hasPendingUpdate = true;
       return;
@@ -58,10 +76,9 @@ export class KeywordSearchService implements OnModuleInit {
     this.hasPendingUpdate = false;
 
     try {
-      const stanbyAutomaton = await this.buildTrieAsync(
-        Array.from(this.currentKeywords),
+      this.activeAutomaton = await this.buildTrieAsync(
+        Array.from(this.keywordRefCounts.keys()),
       );
-      this.activeAutomaton = stanbyAutomaton;
     } finally {
       this.isBuilding = false;
 
@@ -73,7 +90,7 @@ export class KeywordSearchService implements OnModuleInit {
     }
   }
 
-  private async buildTrieAsync(keywords: string[]): Promise<AhoCorasick> {
+  private buildTrieAsync(keywords: string[]): Promise<AhoCorasick> {
     return new Promise((resolve) => {
       const ac = new AhoCorasick(keywords);
       resolve(ac);

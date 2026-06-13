@@ -55,6 +55,20 @@ export class NotificationsService {
     return { added, ignored: keywords.length - added };
   }
 
+  async deleteKeywords(
+    userId: string,
+    keywords: string[],
+  ): Promise<{ deleted: number }> {
+    const deleted = await this.keywordSubscriptionsRepository.deleteMany(
+      userId,
+      keywords,
+    );
+    this.keywordSearchService
+      .deleteKeywords(keywords)
+      .catch((error) => this.logger.error('Error deleting keywords:', error));
+    return { deleted };
+  }
+
   async saveSources(
     userId: string,
     sources: string[],
@@ -64,6 +78,17 @@ export class NotificationsService {
       sources,
     );
     return { added, ignored: sources.length - added };
+  }
+
+  async deleteSources(
+    userId: string,
+    sources: string[],
+  ): Promise<{ deleted: number }> {
+    const deleted = await this.sourceSubscriptionsRepository.deleteMany(
+      userId,
+      sources,
+    );
+    return { deleted };
   }
 
   async dispatchNotifications(notices: Notice[]): Promise<void> {

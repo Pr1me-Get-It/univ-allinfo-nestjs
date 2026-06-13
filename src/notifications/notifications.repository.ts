@@ -45,14 +45,26 @@ export class KeywordSubscriptionsRepository extends Repository<KeywordSubscripti
     return (result.raw as { affectedRows: number }).affectedRows;
   }
 
-  async findDistinctKeywords(): Promise<string[]> {
-    const rawResults: { keyword: string }[] = await this.createQueryBuilder(
-      'keyword_subscriptions',
-    )
-      .select('DISTINCT keyword_subscriptions.keyword', 'keyword')
-      .getRawMany();
+  async deleteMany(userId: string, keywords: string[]): Promise<number> {
+    const result = await this.createQueryBuilder()
+      .delete()
+      .from(KeywordSubscription)
+      .where('user_id = :userId', { userId })
+      .andWhere('keyword IN (:...keywords)', { keywords })
+      .execute();
+    return (result.raw as { affectedRows: number }).affectedRows;
+  }
 
-    return rawResults.map((row) => row.keyword);
+  async findKeywordCounts(): Promise<Map<string, number>> {
+    const rows = await this.createQueryBuilder('ks')
+      .select('ks.keyword', 'keyword')
+      .addSelect('COUNT(*)', 'count')
+      .groupBy('ks.keyword')
+      .getRawMany<{ keyword: string; count: string }>();
+
+    return new Map(
+      rows.map(({ keyword, count }) => [keyword, parseInt(count, 10)]),
+    );
   }
 
   async findUserIdsByKeywords(
@@ -88,6 +100,16 @@ export class SourceSubscriptionsRepository extends Repository<SourceSubscription
       .into(SourceSubscription)
       .values(sources.map((source) => ({ userId, source })))
       .orIgnore()
+      .execute();
+    return (result.raw as { affectedRows: number }).affectedRows;
+  }
+
+  async deleteMany(userId: string, sources: string[]): Promise<number> {
+    const result = await this.createQueryBuilder()
+      .delete()
+      .from(SourceSubscription)
+      .where('user_id = :userId', { userId })
+      .andWhere('source IN (:...sources)', { sources })
       .execute();
     return (result.raw as { affectedRows: number }).affectedRows;
   }
