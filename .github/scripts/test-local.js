@@ -19,19 +19,21 @@ const DEFAULT_FILES = 'src/notifications/notifications.controller.ts';
 const files = process.argv[2] || DEFAULT_FILES;
 
 process.env.CHANGED_FILES = files;
-process.env.REPO_ROOT     = path.resolve(__dirname, '../../');
-process.env.PR_TITLE      = process.env.PR_TITLE     || '[테스트] 알림 API 추가';
-process.env.PR_NUMBER     = process.env.PR_NUMBER    || '99';
-process.env.PR_AUTHOR     = process.env.PR_AUTHOR    || 'local-test';
-process.env.PR_MERGED_AT  = process.env.PR_MERGED_AT || new Date().toISOString();
+process.env.REPO_ROOT = path.resolve(__dirname, '../../');
+process.env.PR_TITLE = process.env.PR_TITLE || '[테스트] 알림 API 추가';
+process.env.PR_NUMBER = process.env.PR_NUMBER || '99';
+process.env.PR_AUTHOR = process.env.PR_AUTHOR || 'local-test';
+process.env.PR_MERGED_AT = process.env.PR_MERGED_AT || new Date().toISOString();
 
 // 환경변수 체크
 const required = ['OPENAI_API_KEY', 'NOTION_API_TOKEN', 'NOTION_DATABASE_ID'];
-const missing = required.filter(k => !process.env[k]);
+const missing = required.filter((k) => !process.env[k]);
 if (missing.length > 0) {
   console.error('❌ 필수 환경변수가 없습니다:');
-  missing.forEach(k => console.error(`   - ${k}`));
-  console.error('\n👉 프로젝트 루트의 .env 파일을 .env.example 을 참고해서 만들어주세요.');
+  missing.forEach((k) => console.error(`   - ${k}`));
+  console.error(
+    '\n👉 프로젝트 루트의 .env 파일을 .env.example 을 참고해서 만들어주세요.',
+  );
   process.exit(1);
 }
 

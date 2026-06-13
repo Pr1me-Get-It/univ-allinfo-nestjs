@@ -18,7 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # 변경사항 비교를 위해 이전 커밋도 필요
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -33,8 +33,8 @@ jobs:
       - name: Get changed API files
         id: changed-files
         run: |
-          # 변경된 파일 목록 추출 (controller, router, route 파일만 필터링)
-          CHANGED=$(git diff --name-only HEAD~1 HEAD | grep -E '\.(controller|router|route)\.(ts|js)$' || true)
+          # PR에 포함된 모든 커밋의 변경 파일 추출 (controller, router, route만 필터링)
+          CHANGED=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep -E '\.(controller|router|route)\.(ts|js)$' || true)
 
           if [ -z "$CHANGED" ]; then
             echo "No API files changed."

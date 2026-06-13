@@ -17,20 +17,26 @@ const { Client } = require('@notionhq/client');
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const notion = new Client({ auth: process.env.NOTION_API_TOKEN });
 
-const DATABASE_ID  = process.env.NOTION_DATABASE_ID;
-const REPO_ROOT    = process.env.REPO_ROOT || process.cwd();
-const PR_TITLE     = process.env.PR_TITLE || '';
-const PR_NUMBER    = process.env.PR_NUMBER || '';
-const PR_AUTHOR    = process.env.PR_AUTHOR || '';
+const DATABASE_ID = process.env.NOTION_DATABASE_ID;
+const REPO_ROOT = process.env.REPO_ROOT || process.cwd();
+const PR_TITLE = process.env.PR_TITLE || '';
+const PR_NUMBER = process.env.PR_NUMBER || '';
+const PR_AUTHOR = process.env.PR_AUTHOR || '';
 const PR_MERGED_AT = process.env.PR_MERGED_AT || new Date().toISOString();
 
 // ─── 유틸: 파일 읽기 ──────────────────────────────────────────────────────────
 function readChangedFiles(filesEnv) {
-  const filePaths = filesEnv.split(',').map(f => f.trim()).filter(Boolean);
+  const filePaths = filesEnv
+    .split(',')
+    .map((f) => f.trim())
+    .filter(Boolean);
   const results = [];
   for (const relPath of filePaths) {
     const absPath = path.join(REPO_ROOT, relPath);
-    if (!fs.existsSync(absPath)) { console.warn(`⚠️  파일 없음: ${absPath}`); continue; }
+    if (!fs.existsSync(absPath)) {
+      console.warn(`⚠️  파일 없음: ${absPath}`);
+      continue;
+    }
     const content = fs.readFileSync(absPath, 'utf-8');
     results.push({ path: relPath, content });
     console.log(`✅ 읽기 성공: ${relPath} (${content.length} chars)`);
@@ -43,39 +49,65 @@ function serializeBlockForAI(block) {
   const type = block.type;
   const data = block[type] || {};
 
-  const extractText = (richText = []) => richText.map(t => t.plain_text || '').join('');
+  const extractText = (richText = []) =>
+    richText.map((t) => t.plain_text || '').join('');
   const extractAnnotations = (richText = []) => {
     const ann = richText[0]?.annotations || {};
-    return Object.entries(ann).filter(([, v]) => v && v !== 'default').map(([k]) => k);
+    return Object.entries(ann)
+      .filter(([, v]) => v && v !== 'default')
+      .map(([k]) => k);
   };
 
   switch (type) {
     case 'heading_1':
     case 'heading_2':
     case 'heading_3':
-      return { type, text: extractText(data.rich_text), level: parseInt(type.slice(-1)) };
+      return {
+        type,
+        text: extractText(data.rich_text),
+        level: parseInt(type.slice(-1)),
+      };
 
     case 'paragraph':
-      return { type, text: extractText(data.rich_text), annotations: extractAnnotations(data.rich_text) };
+      return {
+        type,
+        text: extractText(data.rich_text),
+        annotations: extractAnnotations(data.rich_text),
+      };
 
     case 'bulleted_list_item':
     case 'numbered_list_item':
       return { type, text: extractText(data.rich_text) };
 
     case 'code':
-      return { type, language: data.language || 'plain text', text: extractText(data.rich_text) };
+      return {
+        type,
+        language: data.language || 'plain text',
+        text: extractText(data.rich_text),
+      };
 
     case 'divider':
       return { type };
 
     case 'table':
-      return { type, has_column_header: data.has_column_header, has_row_header: data.has_row_header };
+      return {
+        type,
+        has_column_header: data.has_column_header,
+        has_row_header: data.has_row_header,
+      };
 
     case 'table_row':
-      return { type, cells: (data.cells || []).map(cell => extractText(cell)) };
+      return {
+        type,
+        cells: (data.cells || []).map((cell) => extractText(cell)),
+      };
 
     case 'callout':
-      return { type, text: extractText(data.rich_text), icon: data.icon?.emoji || '' };
+      return {
+        type,
+        text: extractText(data.rich_text),
+        icon: data.icon?.emoji || '',
+      };
 
     case 'toggle':
       return { type, text: extractText(data.rich_text) };
@@ -91,12 +123,18 @@ function serializeBlockForAI(block) {
 // ─── Notion: 샘플 페이지 블록 구조 추출 (재귀적으로 자식까지) ────────────────
 async function fetchBlocksRecursive(blockId, depth = 0) {
   if (depth > 3) return [];
-  const response = await notion.blocks.children.list({ block_id: blockId, page_size: 100 });
+  const response = await notion.blocks.children.list({
+    block_id: blockId,
+    page_size: 100,
+  });
   const blocks = [];
 
   for (const block of response.results) {
     const serialized = serializeBlockForAI(block);
-    if (block.has_children && ['table', 'toggle', 'bulleted_list_item'].includes(block.type)) {
+    if (
+      block.has_children &&
+      ['table', 'toggle', 'bulleted_list_item'].includes(block.type)
+    ) {
       serialized.children = await fetchBlocksRecursive(block.id, depth + 1);
     }
     blocks.push({ _id: block.id, _raw: block, _serialized: serialized });
@@ -112,41 +150,58 @@ async function fetchNotionTemplate() {
   const dbProperties = Object.entries(db.properties).map(([name, prop]) => ({
     name,
     type: prop.type,
-    options: prop.select?.options?.map(o => o.name)
-           || prop.multi_select?.options?.map(o => o.name)
-           || undefined,
+    options:
+      prop.select?.options?.map((o) => o.name) ||
+      prop.multi_select?.options?.map((o) => o.name) ||
+      undefined,
   }));
 
   // 샘플 페이지 2개 가져오기 (일관된 패턴 파악)
-  const pages = await notion.databases.query({ database_id: DATABASE_ID, page_size: 2 });
+  const pages = await notion.databases.query({
+    database_id: DATABASE_ID,
+    page_size: 2,
+  });
   const sampleTemplates = [];
 
   for (const page of pages.results) {
     const blocks = await fetchBlocksRecursive(page.id);
     sampleTemplates.push({
       pageId: page.id,
-      properties: Object.entries(page.properties).reduce((acc, [name, prop]) => {
-        acc[name] = extractPropertyValue(prop);
-        return acc;
-      }, {}),
-      blocks: blocks.map(b => b._serialized),
+      properties: Object.entries(page.properties).reduce(
+        (acc, [name, prop]) => {
+          acc[name] = extractPropertyValue(prop);
+          return acc;
+        },
+        {},
+      ),
+      blocks: blocks.map((b) => b._serialized),
     });
   }
 
-  console.log(`   DB 속성 ${dbProperties.length}개, 샘플 페이지 ${sampleTemplates.length}개 파악 완료`);
+  console.log(
+    `   DB 속성 ${dbProperties.length}개, 샘플 페이지 ${sampleTemplates.length}개 파악 완료`,
+  );
   return { dbProperties, sampleTemplates, rawDb: db };
 }
 
 function extractPropertyValue(prop) {
   switch (prop.type) {
-    case 'title':        return prop.title?.map(t => t.plain_text).join('') || '';
-    case 'rich_text':    return prop.rich_text?.map(t => t.plain_text).join('') || '';
-    case 'select':       return prop.select?.name || '';
-    case 'multi_select': return prop.multi_select?.map(s => s.name) || [];
-    case 'date':         return prop.date?.start || '';
-    case 'url':          return prop.url || '';
-    case 'number':       return prop.number ?? '';
-    default:             return '';
+    case 'title':
+      return prop.title?.map((t) => t.plain_text).join('') || '';
+    case 'rich_text':
+      return prop.rich_text?.map((t) => t.plain_text).join('') || '';
+    case 'select':
+      return prop.select?.name || '';
+    case 'multi_select':
+      return prop.multi_select?.map((s) => s.name) || [];
+    case 'date':
+      return prop.date?.start || '';
+    case 'url':
+      return prop.url || '';
+    case 'number':
+      return prop.number ?? '';
+    default:
+      return '';
   }
 }
 
@@ -154,9 +209,11 @@ function extractPropertyValue(prop) {
 async function analyzeAndBuildWithOpenAI(files, template) {
   console.log('\n🤖 OpenAI로 코드 분석 및 Notion 블록 생성 중...');
 
-  const codeContext = files.map(f => `=== ${f.path} ===\n${f.content}`).join('\n\n');
+  const codeContext = files
+    .map((f) => `=== ${f.path} ===\n${f.content}`)
+    .join('\n\n');
   const dbPropsJson = JSON.stringify(template.dbProperties, null, 2);
-  const sampleJson  = JSON.stringify(template.sampleTemplates, null, 2);
+  const sampleJson = JSON.stringify(template.sampleTemplates, null, 2);
 
   const systemPrompt = `당신은 NestJS/Express API 명세서 작성 전문가입니다.
 응답은 반드시 순수 JSON만 반환하세요. 마크다운 코드블록(예: \`\`\`json)을 절대 포함하지 마세요.`;
@@ -237,7 +294,10 @@ async function appendBlocksWithChildren(pageId, blocks) {
   for (let i = 0; i < blocks.length; i++) {
     const block = blocks[i];
     if (block.type === 'table' && block.children) {
-      tableChildrenMap.push({ blockIndex: topLevelBlocks.length, children: block.children });
+      tableChildrenMap.push({
+        blockIndex: topLevelBlocks.length,
+        children: block.children,
+      });
       const { children: _, ...blockWithoutChildren } = block;
       topLevelBlocks.push(blockWithoutChildren);
     } else {
@@ -250,7 +310,10 @@ async function appendBlocksWithChildren(pageId, blocks) {
   const createdBlocks = [];
   for (let i = 0; i < topLevelBlocks.length; i += CHUNK_SIZE) {
     const chunk = topLevelBlocks.slice(i, i + CHUNK_SIZE);
-    const result = await notion.blocks.children.append({ block_id: pageId, children: chunk });
+    const result = await notion.blocks.children.append({
+      block_id: pageId,
+      children: chunk,
+    });
     createdBlocks.push(...result.results);
   }
 
@@ -258,7 +321,10 @@ async function appendBlocksWithChildren(pageId, blocks) {
   for (const { blockIndex, children } of tableChildrenMap) {
     const tableBlock = createdBlocks[blockIndex];
     if (tableBlock) {
-      await notion.blocks.children.append({ block_id: tableBlock.id, children });
+      await notion.blocks.children.append({
+        block_id: tableBlock.id,
+        children,
+      });
     }
   }
 }
@@ -284,23 +350,35 @@ async function main() {
   console.log(`👤 작성자: ${PR_AUTHOR} | 📅 Merge: ${PR_MERGED_AT}\n`);
 
   const changedFilesEnv = process.env.CHANGED_FILES || '';
-  if (!changedFilesEnv) { console.log('변경된 API 파일 없음. 종료.'); return; }
+  if (!changedFilesEnv) {
+    console.log('변경된 API 파일 없음. 종료.');
+    return;
+  }
 
   const files = readChangedFiles(changedFilesEnv);
-  if (files.length === 0) { console.log('읽을 수 있는 파일이 없음. 종료.'); return; }
+  if (files.length === 0) {
+    console.log('읽을 수 있는 파일이 없음. 종료.');
+    return;
+  }
 
   const template = await fetchNotionTemplate();
 
   const result = await analyzeAndBuildWithOpenAI(files, template);
   const apis = result.apis || [];
 
-  if (apis.length === 0) { console.log('\n✅ 새로 추가된 API 없음. 종료.'); return; }
+  if (apis.length === 0) {
+    console.log('\n✅ 새로 추가된 API 없음. 종료.');
+    return;
+  }
 
   console.log(`\n📝 Notion에 ${apis.length}개 API 명세서 작성 중...`);
-  let succeeded = 0, failed = 0;
+  let succeeded = 0,
+    failed = 0;
 
   for (const apiData of apis) {
-    const titleProp = Object.values(apiData.properties || {}).find(p => p.title);
+    const titleProp = Object.values(apiData.properties || {}).find(
+      (p) => p.title,
+    );
     const titleText = titleProp?.title?.[0]?.text?.content || '(제목 없음)';
 
     try {
@@ -309,7 +387,11 @@ async function main() {
       succeeded++;
     } catch (err) {
       console.error(`   ❌ ${titleText} 실패: ${err.message}`);
-      if (err.body) console.error(`      Notion 오류 상세:`, JSON.stringify(err.body, null, 2));
+      if (err.body)
+        console.error(
+          `      Notion 오류 상세:`,
+          JSON.stringify(err.body, null, 2),
+        );
       failed++;
     }
   }
@@ -318,7 +400,7 @@ async function main() {
   if (failed > 0) process.exit(1);
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error('❌ 치명적 오류:', err);
   process.exit(1);
 });
