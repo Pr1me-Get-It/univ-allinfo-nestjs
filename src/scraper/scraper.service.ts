@@ -3,6 +3,7 @@ import { Notice } from '../notices/entities/notice.entity';
 import { ScrapeConfig } from './scraper.interface';
 import { extractNotices } from './utils/extractor.util';
 import { extractDeadline } from './utils/deadlineExtractor';
+import { In } from 'typeorm';
 import { NoticesRepository } from '@src/notices/notices.repository';
 
 @Injectable()
@@ -52,6 +53,7 @@ export class ScraperService {
     if (newNotices.length === 0) return [];
     await this.noticeRepository.insert(newNotices);
     this.logger.log(`DB 업데이트: ${newNotices.length}개의 새 공지 저장`);
-    return newNotices as Notice[];
+    const hashes = newNotices.map((n) => n.hashedUrl as string);
+    return this.noticeRepository.findBy({ hashedUrl: In(hashes) });
   }
 }

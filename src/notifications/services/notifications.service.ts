@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { Expo } from 'expo-server-sdk';
 import { Notice } from '@src/notices/entities/notice.entity';
 import {
@@ -6,7 +6,7 @@ import {
   NotificationsRepository,
   SourceSubscriptionsRepository,
 } from '../notifications.repository';
-import { KeywordSearchService } from './keyword-serch.service';
+import { KeywordSearchService } from './keyword-search.service';
 
 interface NotificationMessage {
   to: string;
@@ -38,6 +38,9 @@ export class NotificationsService {
   }
 
   async saveExpoToken(userId: string, expoPushToken: string) {
+    if (!Expo.isExpoPushToken(expoPushToken)) {
+      throw new BadRequestException('Invalid Expo push token');
+    }
     return this.notificationsRepository.saveExpoToken(userId, expoPushToken);
   }
 
@@ -132,10 +135,12 @@ export class NotificationsService {
     const keywordToNotices = new Map<string, Notice[]>();
     for (const notice of notices) {
       for (const keyword of this.keywordSearchService.search(notice.title)) {
-        keywordToNotices.set(keyword, [
-          ...(keywordToNotices.get(keyword) ?? []),
-          notice,
-        ]);
+        const list = keywordToNotices.get(keyword);
+        if (list) {
+          list.push(notice);
+        } else {
+          keywordToNotices.set(keyword, [notice]);
+        }
       }
     }
     if (keywordToNotices.size === 0) return;
@@ -161,10 +166,12 @@ export class NotificationsService {
   ): Promise<void> {
     const sourceToNotices = new Map<string, Notice[]>();
     for (const notice of notices) {
-      sourceToNotices.set(notice.source, [
-        ...(sourceToNotices.get(notice.source) ?? []),
-        notice,
-      ]);
+      const list = sourceToNotices.get(notice.source);
+      if (list) {
+        list.push(notice);
+      } else {
+        sourceToNotices.set(notice.source, [notice]);
+      }
     }
 
     const sourceToUserIds =
@@ -191,10 +198,12 @@ export class NotificationsService {
 
     const userIdToTokens = new Map<string, string[]>();
     for (const { userId, expoPushToken } of expoTokens) {
-      userIdToTokens.set(userId, [
-        ...(userIdToTokens.get(userId) ?? []),
-        expoPushToken,
-      ]);
+      const list = userIdToTokens.get(userId);
+      if (list) {
+        list.push(expoPushToken);
+      } else {
+        userIdToTokens.set(userId, [expoPushToken]);
+      }
     }
 
     const messages: NotificationMessage[] = [];
@@ -227,9 +236,15 @@ export class NotificationsService {
 
   private async sendMessages(messages: NotificationMessage[]) {
     const chunks = this.expo.chunkPushNotifications(messages);
-    for (const chunk of chunks) {
-      const ticket = await this.expo.sendPushNotificationsAsync(chunk);
-      this.logger.log(ticket);
-    }
+    await Promise.all(
+      chunks.map(async (chunk) => {
+        try {
+          const tickets = await this.expo.sendPushNotificationsAsync(chunk);
+          this.logger.log(tickets);
+        } catch (error) {
+          this.logger.error('Failed to send push notification chunk:', error);
+        }
+      }),
+    );
   }
 }

@@ -36,23 +36,26 @@ export class KeywordSubscriptionsRepository extends Repository<KeywordSubscripti
   }
 
   async saveMany(userId: string, keywords: string[]): Promise<number> {
+    if (keywords.length === 0) return 0;
     const result = await this.createQueryBuilder()
       .insert()
       .into(KeywordSubscription)
       .values(keywords.map((keyword) => ({ userId, keyword })))
       .orIgnore()
       .execute();
-    return (result.raw as { affectedRows: number }).affectedRows;
+    const affectedRows = (result.raw as { affectedRows?: number })?.affectedRows;
+    return typeof affectedRows === 'number' ? affectedRows : result.identifiers.length;
   }
 
   async deleteMany(userId: string, keywords: string[]): Promise<number> {
+    if (keywords.length === 0) return 0;
     const result = await this.createQueryBuilder()
       .delete()
       .from(KeywordSubscription)
       .where('user_id = :userId', { userId })
       .andWhere('keyword IN (:...keywords)', { keywords })
       .execute();
-    return (result.raw as { affectedRows: number }).affectedRows;
+    return result.affected ?? 0;
   }
 
   async findKeywordCounts(): Promise<Map<string, number>> {
@@ -95,23 +98,26 @@ export class SourceSubscriptionsRepository extends Repository<SourceSubscription
   }
 
   async saveMany(userId: string, sources: string[]): Promise<number> {
+    if (sources.length === 0) return 0;
     const result = await this.createQueryBuilder()
       .insert()
       .into(SourceSubscription)
       .values(sources.map((source) => ({ userId, source })))
       .orIgnore()
       .execute();
-    return (result.raw as { affectedRows: number }).affectedRows;
+    const affectedRows = (result.raw as { affectedRows?: number })?.affectedRows;
+    return typeof affectedRows === 'number' ? affectedRows : result.identifiers.length;
   }
 
   async deleteMany(userId: string, sources: string[]): Promise<number> {
+    if (sources.length === 0) return 0;
     const result = await this.createQueryBuilder()
       .delete()
       .from(SourceSubscription)
       .where('user_id = :userId', { userId })
       .andWhere('source IN (:...sources)', { sources })
       .execute();
-    return (result.raw as { affectedRows: number }).affectedRows;
+    return result.affected ?? 0;
   }
 
   /** source 목록에 구독 중인 userId를 source별로 묶어 반환합니다. */
