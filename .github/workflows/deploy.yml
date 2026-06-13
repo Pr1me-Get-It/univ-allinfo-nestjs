@@ -26,11 +26,15 @@ jobs:
             # 1. 기존 컨테이너 내리기 (프로덕션 파일명 명시)
             docker-compose -f docker-compose.prod.yml down
 
-            # 2. 프로덕션 파일로 백그라운드 빌드 및 실행
-            docker-compose -f docker-compose.prod.yml up --build -d
+            # 2. 프로덕션 파일로 빌드 (실행은 아직 안 함)
+            docker-compose -f docker-compose.prod.yml build
 
-            # 3. 마이그레이션 실행
-            docker-compose -f docker-compose.prod.yml exec -T api npm run migration:run:prod
+            # 3. DB만 먼저 올리고 마이그레이션 실행
+            docker-compose -f docker-compose.prod.yml up -d db
+            docker-compose -f docker-compose.prod.yml run --rm api npm run migration:run:prod
+
+            # 4. 전체 서비스 실행
+            docker-compose -f docker-compose.prod.yml up -d
 
             # 4. 쓸모없는 더미 도커 이미지 청소
             docker image prune -f
