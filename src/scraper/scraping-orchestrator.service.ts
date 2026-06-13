@@ -29,24 +29,29 @@ export class ScrapingOrchestratorService {
     this.logger.log('✨ 스크래핑 파이프라인을 시작합니다...');
 
     try {
+      const CONCURRENCY = 3;
       const tasks = this.scrapeConfigs.flatMap((config) =>
-        config.boards.map((board) =>
+        config.boards.map((board) => () =>
           this.scraperService.scrapeBoard(config, board),
         ),
       );
-      const results = await Promise.allSettled(tasks);
 
-      const allNotices = results
-        .filter((r): r is PromiseFulfilledResult<Notice[]> => {
+      const allNotices: Notice[] = [];
+      for (let i = 0; i < tasks.length; i += CONCURRENCY) {
+        const results = await Promise.allSettled(
+          tasks.slice(i, i + CONCURRENCY).map((task) => task()),
+        );
+        for (const r of results) {
           if (r.status === 'rejected') {
             this.logger.error(
               '스크래핑 실패. 해당 게시판을 건너뜁니다.',
               r.reason instanceof Error ? r.reason.stack : String(r.reason),
             );
+          } else {
+            allNotices.push(...r.value);
           }
-          return r.status === 'fulfilled';
-        })
-        .flatMap((r) => r.value);
+        }
+      }
 
       this.logger.log(`✅ 스크래핑 완료. 신규 공지 총 ${allNotices.length}건`);
 
