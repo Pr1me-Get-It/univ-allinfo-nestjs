@@ -205,22 +205,24 @@ export class NotificationsService {
     notices: Notice[],
     merge: (userId: string, patch: Partial<UserNotificationData>) => void,
   ): Promise<void> {
-    const sourceToNotices = new Map<string, Notice[]>();
+    // notice.source 형태: "CSE_학부공지" → 구독 코드: "CSE"
+    const codeToNotices = new Map<string, Notice[]>();
     for (const notice of notices) {
-      const list = sourceToNotices.get(notice.source);
+      const code = notice.source.split('_')[0];
+      const list = codeToNotices.get(code);
       if (list) {
         list.push(notice);
       } else {
-        sourceToNotices.set(notice.source, [notice]);
+        codeToNotices.set(code, [notice]);
       }
     }
 
     const sourceToUserIds =
       await this.sourceSubscriptionsRepository.findUserIdsBySources(
-        Array.from(sourceToNotices.keys()),
+        Array.from(codeToNotices.keys()),
       );
 
-    for (const [source, noticeList] of sourceToNotices) {
+    for (const [source, noticeList] of codeToNotices) {
       for (const userId of sourceToUserIds.get(source) ?? []) {
         merge(userId, {
           sources: new Set([source]),
