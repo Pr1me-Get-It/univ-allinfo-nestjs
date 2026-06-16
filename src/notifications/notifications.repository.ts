@@ -51,6 +51,15 @@ export class KeywordSubscriptionsRepository extends Repository<KeywordSubscripti
     return rows.map((r) => r.keyword);
   }
 
+  async findExistingKeywords(userId: string, keywords: string[]): Promise<Set<string>> {
+    if (keywords.length === 0) return new Set();
+    const rows = await this.find({
+      where: { userId, keyword: In(keywords) },
+      select: ['keyword'],
+    });
+    return new Set(rows.map((r) => r.keyword));
+  }
+
   async saveMany(userId: string, keywords: string[]): Promise<number> {
     if (keywords.length === 0) return 0;
     const result = await this.createQueryBuilder()
