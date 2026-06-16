@@ -27,12 +27,25 @@ export class NotificationsRepository extends Repository<ExpoToken> {
     if (userIds.length === 0) return [];
     return this.find({ where: { userId: In(userIds), isActive: true } });
   }
+
+  async setActive(
+    userId: string,
+    expoPushToken: string,
+    isActive: boolean,
+  ): Promise<void> {
+    await this.update({ userId, expoPushToken }, { isActive });
+  }
 }
 
 @Injectable()
 export class KeywordSubscriptionsRepository extends Repository<KeywordSubscription> {
   constructor(dataSource: DataSource) {
     super(KeywordSubscription, dataSource.manager);
+  }
+
+  async findByUserId(userId: string): Promise<string[]> {
+    const rows = await this.find({ where: { userId }, select: ['keyword'] });
+    return rows.map((r) => r.keyword);
   }
 
   async saveMany(userId: string, keywords: string[]): Promise<number> {
@@ -43,8 +56,11 @@ export class KeywordSubscriptionsRepository extends Repository<KeywordSubscripti
       .values(keywords.map((keyword) => ({ userId, keyword })))
       .orIgnore()
       .execute();
-    const affectedRows = (result.raw as { affectedRows?: number })?.affectedRows;
-    return typeof affectedRows === 'number' ? affectedRows : result.identifiers.length;
+    const affectedRows = (result.raw as { affectedRows?: number })
+      ?.affectedRows;
+    return typeof affectedRows === 'number'
+      ? affectedRows
+      : result.identifiers.length;
   }
 
   async deleteMany(userId: string, keywords: string[]): Promise<number> {
@@ -97,6 +113,11 @@ export class SourceSubscriptionsRepository extends Repository<SourceSubscription
     super(SourceSubscription, dataSource.manager);
   }
 
+  async findByUserId(userId: string): Promise<string[]> {
+    const rows = await this.find({ where: { userId }, select: ['source'] });
+    return rows.map((r) => r.source);
+  }
+
   async saveMany(userId: string, sources: string[]): Promise<number> {
     if (sources.length === 0) return 0;
     const result = await this.createQueryBuilder()
@@ -105,8 +126,11 @@ export class SourceSubscriptionsRepository extends Repository<SourceSubscription
       .values(sources.map((source) => ({ userId, source })))
       .orIgnore()
       .execute();
-    const affectedRows = (result.raw as { affectedRows?: number })?.affectedRows;
-    return typeof affectedRows === 'number' ? affectedRows : result.identifiers.length;
+    const affectedRows = (result.raw as { affectedRows?: number })
+      ?.affectedRows;
+    return typeof affectedRows === 'number'
+      ? affectedRows
+      : result.identifiers.length;
   }
 
   async deleteMany(userId: string, sources: string[]): Promise<number> {
