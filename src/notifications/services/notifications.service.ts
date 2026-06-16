@@ -71,9 +71,17 @@ export class NotificationsService {
     userId: string,
     keywords: string[],
   ): Promise<{ added: number; ignored: number }> {
-    const existing = await this.keywordSubscriptionsRepository.findExistingKeywords(userId, keywords);
-    const newToUser = keywords.filter((k) => !existing.has(k));
-    const added = await this.keywordSubscriptionsRepository.saveMany(userId, keywords);
+    const unique = Array.from(new Set(keywords));
+    const existing =
+      await this.keywordSubscriptionsRepository.findExistingKeywords(
+        userId,
+        unique,
+      );
+    const newToUser = unique.filter((k) => !existing.has(k));
+    const added = await this.keywordSubscriptionsRepository.saveMany(
+      userId,
+      unique,
+    );
     if (newToUser.length > 0) {
       this.keywordSearchService
         .addKeywords(newToUser)
@@ -86,9 +94,17 @@ export class NotificationsService {
     userId: string,
     keywords: string[],
   ): Promise<{ deleted: number }> {
-    const existing = await this.keywordSubscriptionsRepository.findExistingKeywords(userId, keywords);
-    const toDelete = keywords.filter((k) => existing.has(k));
-    const deleted = await this.keywordSubscriptionsRepository.deleteMany(userId, keywords);
+    const unique = Array.from(new Set(keywords));
+    const existing =
+      await this.keywordSubscriptionsRepository.findExistingKeywords(
+        userId,
+        unique,
+      );
+    const toDelete = unique.filter((k) => existing.has(k));
+    const deleted = await this.keywordSubscriptionsRepository.deleteMany(
+      userId,
+      unique,
+    );
     if (toDelete.length > 0) {
       this.keywordSearchService
         .deleteKeywords(toDelete)
