@@ -71,13 +71,22 @@ export class NotificationsService {
     userId: string,
     keywords: string[],
   ): Promise<{ added: number; ignored: number }> {
+    const unique = Array.from(new Set(keywords));
+    const existing =
+      await this.keywordSubscriptionsRepository.findExistingKeywords(
+        userId,
+        unique,
+      );
+    const newToUser = unique.filter((k) => !existing.has(k));
     const added = await this.keywordSubscriptionsRepository.saveMany(
       userId,
-      keywords,
+      unique,
     );
-    this.keywordSearchService
-      .addKeywords(keywords)
-      .catch((error) => this.logger.error('Error adding keywords:', error));
+    if (newToUser.length > 0) {
+      this.keywordSearchService
+        .addKeywords(newToUser)
+        .catch((error) => this.logger.error('Error adding keywords:', error));
+    }
     return { added, ignored: keywords.length - added };
   }
 
@@ -85,13 +94,22 @@ export class NotificationsService {
     userId: string,
     keywords: string[],
   ): Promise<{ deleted: number }> {
+    const unique = Array.from(new Set(keywords));
+    const existing =
+      await this.keywordSubscriptionsRepository.findExistingKeywords(
+        userId,
+        unique,
+      );
+    const toDelete = unique.filter((k) => existing.has(k));
     const deleted = await this.keywordSubscriptionsRepository.deleteMany(
       userId,
-      keywords,
+      unique,
     );
-    this.keywordSearchService
-      .deleteKeywords(keywords)
-      .catch((error) => this.logger.error('Error deleting keywords:', error));
+    if (toDelete.length > 0) {
+      this.keywordSearchService
+        .deleteKeywords(toDelete)
+        .catch((error) => this.logger.error('Error deleting keywords:', error));
+    }
     return { deleted };
   }
 
