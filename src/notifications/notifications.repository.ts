@@ -3,6 +3,9 @@ import { ExpoToken } from './entities/expo-token.entity';
 import { Repository, DataSource, In } from 'typeorm';
 import { KeywordSubscription } from './entities/keyword-subscriptions.entity';
 import { SourceSubscription } from './entities/source-subscription.entity';
+import { UUIDTransformer } from '@src/common/transformers/uuid.transformer';
+
+const uuidTransformer = new UUIDTransformer();
 
 @Injectable()
 export class NotificationsRepository extends Repository<ExpoToken> {
@@ -95,12 +98,12 @@ export class KeywordSubscriptionsRepository extends Repository<KeywordSubscripti
       .select('ks.keyword', 'keyword')
       .addSelect('ks.user_id', 'userId')
       .where('ks.keyword IN (:...keywords)', { keywords })
-      .getRawMany<{ keyword: string; userId: string }>();
+      .getRawMany<{ keyword: string; userId: Buffer }>();
 
     const result = new Map<string, string[]>();
     for (const { keyword, userId } of rows) {
       const list = result.get(keyword) ?? [];
-      list.push(userId);
+      list.push(uuidTransformer.from(userId) as string);
       result.set(keyword, list);
     }
     return result;
@@ -154,12 +157,12 @@ export class SourceSubscriptionsRepository extends Repository<SourceSubscription
       .select('ss.source', 'source')
       .addSelect('ss.user_id', 'userId')
       .where('ss.source IN (:...sources)', { sources })
-      .getRawMany<{ source: string; userId: string }>();
+      .getRawMany<{ source: string; userId: Buffer }>();
 
     const result = new Map<string, string[]>();
     for (const { source, userId } of rows) {
       const list = result.get(source) ?? [];
-      list.push(userId);
+      list.push(uuidTransformer.from(userId) as string);
       result.set(source, list);
     }
     return result;
