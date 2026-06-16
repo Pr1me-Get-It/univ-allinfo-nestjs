@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  ParseBoolPipe,
   Patch,
   Post,
   UseGuards,
@@ -29,7 +30,7 @@ export class NotificationsController {
   async setExpoTokenActive(
     @CurrentUser('id') userId: string,
     @Body('expoPushToken') expoPushToken: string,
-    @Body('isActive') isActive: boolean,
+    @Body('isActive', ParseBoolPipe) isActive: boolean,
   ) {
     await this.notificationsService.setExpoTokenActive(
       userId,

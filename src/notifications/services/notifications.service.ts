@@ -57,6 +57,9 @@ export class NotificationsService {
     expoPushToken: string,
     isActive: boolean,
   ): Promise<void> {
+    if (!Expo.isExpoPushToken(expoPushToken)) {
+      throw new BadRequestException('Invalid Expo push token');
+    }
     return this.notificationsRepository.setActive(
       userId,
       expoPushToken,
