@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { NotificationsService } from './services/notifications.service';
 import { JwtGuard } from '@src/auth/guards/jwt.guard';
 import { CurrentUser } from '@src/auth/decorators/current-user.decorator';
@@ -14,6 +22,26 @@ export class NotificationsController {
     @Body('expoPushToken') expoPushToken: string,
   ) {
     await this.notificationsService.saveExpoToken(userId, expoPushToken);
+  }
+
+  @Patch('expo-token')
+  @UseGuards(JwtGuard)
+  async setExpoTokenActive(
+    @CurrentUser('id') userId: string,
+    @Body('expoPushToken') expoPushToken: string,
+    @Body('isActive') isActive: boolean,
+  ) {
+    await this.notificationsService.setExpoTokenActive(
+      userId,
+      expoPushToken,
+      isActive,
+    );
+  }
+
+  @Get('keywords')
+  @UseGuards(JwtGuard)
+  async getKeywords(@CurrentUser('id') userId: string) {
+    return this.notificationsService.getKeywords(userId);
   }
 
   @Post('keywords')
@@ -32,6 +60,12 @@ export class NotificationsController {
     @Body('keywords') keywords: string[],
   ) {
     return await this.notificationsService.deleteKeywords(userId, keywords);
+  }
+
+  @Get('sources')
+  @UseGuards(JwtGuard)
+  async getSources(@CurrentUser('id') userId: string) {
+    return this.notificationsService.getSources(userId);
   }
 
   @Post('sources')

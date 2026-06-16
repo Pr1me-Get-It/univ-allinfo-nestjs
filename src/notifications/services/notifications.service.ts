@@ -44,6 +44,26 @@ export class NotificationsService {
     return this.notificationsRepository.saveExpoToken(userId, expoPushToken);
   }
 
+  async getKeywords(userId: string): Promise<string[]> {
+    return this.keywordSubscriptionsRepository.findByUserId(userId);
+  }
+
+  async getSources(userId: string): Promise<string[]> {
+    return this.sourceSubscriptionsRepository.findByUserId(userId);
+  }
+
+  async setExpoTokenActive(
+    userId: string,
+    expoPushToken: string,
+    isActive: boolean,
+  ): Promise<void> {
+    return this.notificationsRepository.setActive(
+      userId,
+      expoPushToken,
+      isActive,
+    );
+  }
+
   async saveKeywords(
     userId: string,
     keywords: string[],
