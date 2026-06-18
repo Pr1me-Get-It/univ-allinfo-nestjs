@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { ExpoToken } from './entities/expo-token.entity';
+import { ExpoToken } from '../entities/expo-token.entity';
 import { Repository, DataSource, In } from 'typeorm';
-import { KeywordSubscription } from './entities/keyword-subscriptions.entity';
-import { SourceSubscription } from './entities/source-subscription.entity';
+import { KeywordSubscription } from '../entities/keyword-subscription.entity';
+import { SourceSubscription } from '../entities/source-subscription.entity';
 import { UUIDTransformer } from '@src/common/transformers/uuid.transformer';
+import { ExpoPushToken } from '../expo-push-token.type';
 
 const uuidTransformer = new UUIDTransformer();
 
@@ -17,12 +18,15 @@ export class NotificationsRepository extends Repository<ExpoToken> {
     return this.find({ where: { userId } });
   }
 
-  async saveExpoToken(userId: string, expoPushToken: string): Promise<void> {
+  async saveExpoToken(
+    userId: string,
+    expoPushToken: ExpoPushToken,
+  ): Promise<void> {
     await this.createQueryBuilder()
       .insert()
       .into(ExpoToken)
       .values({ userId, expoPushToken })
-      .orIgnore()
+      .orUpdate(['user_id'], ['expo_push_token'])
       .execute();
   }
 
@@ -33,7 +37,7 @@ export class NotificationsRepository extends Repository<ExpoToken> {
 
   async setActive(
     userId: string,
-    expoPushToken: string,
+    expoPushToken: ExpoPushToken,
     isActive: boolean,
   ): Promise<void> {
     await this.update({ userId, expoPushToken }, { isActive });
@@ -80,12 +84,7 @@ export class KeywordSubscriptionsRepository extends Repository<KeywordSubscripti
 
   async deleteMany(userId: string, keywords: string[]): Promise<number> {
     if (keywords.length === 0) return 0;
-    const result = await this.createQueryBuilder()
-      .delete()
-      .from(KeywordSubscription)
-      .where('user_id = :userId', { userId })
-      .andWhere('keyword IN (:...keywords)', { keywords })
-      .execute();
+    const result = await this.delete({ userId, keyword: In(keywords) });
     return result.affected ?? 0;
   }
 
@@ -150,12 +149,7 @@ export class SourceSubscriptionsRepository extends Repository<SourceSubscription
 
   async deleteMany(userId: string, sources: string[]): Promise<number> {
     if (sources.length === 0) return 0;
-    const result = await this.createQueryBuilder()
-      .delete()
-      .from(SourceSubscription)
-      .where('user_id = :userId', { userId })
-      .andWhere('source IN (:...sources)', { sources })
-      .execute();
+    const result = await this.delete({ userId, source: In(sources) });
     return result.affected ?? 0;
   }
 

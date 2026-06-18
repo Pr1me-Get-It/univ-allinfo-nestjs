@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Notice } from '../notices/entities/notice.entity';
 import { ScrapeConfig } from './scraper.interface';
 import { extractNotices } from './utils/extractor.util';
-import { extractDeadline } from './utils/deadlineExtractor';
+import { extractDeadline } from './utils/deadline-extractor.util';
 import { In } from 'typeorm';
 import { NoticesRepository } from '@src/notices/notices.repository';
 

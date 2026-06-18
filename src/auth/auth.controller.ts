@@ -1,47 +1,39 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { JwtGuard } from './guards/jwt.guard';
 import { LoginResponseDto } from './dto/login-response.dto';
+import { AppleLoginDto } from './dto/apple-login.dto';
+import { GoogleLoginDto } from './dto/google-login.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { CurrentUser } from './decorators/current-user.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('apple')
-  async appleLogin(
-    @Body('idToken') idToken: string,
-    @Body('authorizationCode') authorizationCode: string,
-  ): Promise<LoginResponseDto> {
-    return await this.authService.appleLogin(idToken, authorizationCode);
+  async appleLogin(@Body() dto: AppleLoginDto): Promise<LoginResponseDto> {
+    return this.authService.appleLogin(dto.idToken, dto.authorizationCode);
   }
 
   @Post('google')
-  async googleAuth(
-    @Body('idToken') idToken: string,
-  ): Promise<LoginResponseDto> {
-    return await this.authService.googleLogin(idToken);
+  async googleAuth(@Body() dto: GoogleLoginDto): Promise<LoginResponseDto> {
+    return this.authService.googleLogin(dto.idToken);
   }
 
   @Post('refresh')
   @UseGuards(JwtRefreshGuard)
-  async refreshTokens(@Req() req, @Body('refreshToken') refreshToken: string) {
-    const userId = req.user.sub;
-    return await this.authService.refreshTokens(userId, refreshToken);
+  async refreshTokens(
+    @CurrentUser('id') userId: string,
+    @Body() dto: RefreshTokenDto,
+  ) {
+    return this.authService.refreshTokens(userId, dto.refreshToken);
   }
 
   @Delete('withdraw')
   @UseGuards(JwtGuard)
-  async withdraw(@Req() req) {
-    const userId = req.user.sub;
-    return await this.authService.withdraw(userId);
+  async withdraw(@CurrentUser('id') userId: string) {
+    return this.authService.withdraw(userId);
   }
 }

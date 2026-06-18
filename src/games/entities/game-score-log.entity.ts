@@ -10,7 +10,7 @@ import { GameType } from '../enums/game-type.enum';
 @Entity('game_score_logs')
 export class GameScoreLog {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
-  id!: string;
+  id: string;
 
   @Column({
     name: 'user_id',
@@ -19,14 +19,14 @@ export class GameScoreLog {
     nullable: false,
     transformer: new UUIDTransformer(),
   })
-  userId!: string;
+  userId: string;
 
   @Column({ name: 'game_type', type: 'enum', enum: GameType, nullable: false })
-  gameType!: GameType;
+  gameType: GameType;
 
   @Column({ type: 'int', nullable: false })
-  score!: number;
+  score: number;
 
   @CreateDateColumn({ name: 'played_at' })
-  playedAt!: Date;
+  playedAt: Date;
 }

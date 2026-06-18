@@ -1,27 +1,28 @@
 import { Expose } from 'class-transformer';
+import type { NullableDate } from '@src/common/types/nullable-date.type';
 
 export class NoticeResponseDto {
   @Expose()
-  id!: string;
+  id: string;
 
   @Expose()
-  source!: string;
+  source: string;
 
   @Expose()
-  title!: string;
+  title: string;
 
   @Expose()
-  url!: string;
+  url: string;
 
   @Expose()
-  postedAt!: Date;
+  postedAt: Date;
 
   @Expose()
-  views!: number;
+  views: number;
 
   @Expose()
-  kickoff!: Date | null;
+  kickoff: NullableDate;
 
   @Expose()
-  deadline!: Date | null;
+  deadline: NullableDate;
 }

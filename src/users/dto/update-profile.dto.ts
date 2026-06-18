@@ -2,7 +2,7 @@ import { College } from '../enums/college.enum';
 import { Department } from '../enums/department.enum';
 import { IsEnum, IsString, MaxLength } from 'class-validator';
 
-export class ProfileUpdateReqDto {
+export class UpdateProfileDto {
   @IsString()
   @MaxLength(50)
   nickname: string;

@@ -17,7 +17,7 @@ export class UserAppleRefreshToken {
     length: 16,
     transformer: new UUIDTransformer(),
   })
-  userId!: string;
+  userId: string;
 
   @Column({
     name: 'apple_refresh_token',
@@ -25,17 +25,17 @@ export class UserAppleRefreshToken {
     length: 512,
     nullable: false,
   })
-  appleRefreshToken!: string;
+  appleRefreshToken: string;
 
   @CreateDateColumn({
     name: 'created_at',
   })
-  createdAt!: Date;
+  createdAt: Date;
 
   @OneToOne(() => User, (user) => user.appleRefreshToken, {
     nullable: false,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })
-  user!: User;
+  user: User;
 }

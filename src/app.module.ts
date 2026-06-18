@@ -1,6 +1,4 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -57,8 +55,6 @@ import { NotificationsModule } from './notifications/notifications.module';
     FeedbacksModule,
     NotificationsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

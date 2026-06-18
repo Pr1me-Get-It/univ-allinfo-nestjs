@@ -4,10 +4,10 @@ import {
   KeywordSubscriptionsRepository,
   NotificationsRepository,
   SourceSubscriptionsRepository,
-} from './notifications.repository';
+} from './repositories/notifications.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ExpoToken } from './entities/expo-token.entity';
-import { KeywordSubscription } from './entities/keyword-subscriptions.entity';
+import { KeywordSubscription } from './entities/keyword-subscription.entity';
 import { SourceSubscription } from './entities/source-subscription.entity';
 import { NotificationsService } from './services/notifications.service';
 import { KeywordSearchService } from './services/keyword-search.service';

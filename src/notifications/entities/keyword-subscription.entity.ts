@@ -18,7 +18,7 @@ export class KeywordSubscription {
     type: 'bigint',
     unsigned: true,
   })
-  id!: number;
+  id: number;
 
   @Column({
     name: 'user_id',
@@ -26,18 +26,18 @@ export class KeywordSubscription {
     length: 16,
     transformer: new UUIDTransformer(),
   })
-  userId!: string;
+  userId: string;
 
   @Column({ name: 'keyword', type: 'varchar', length: 64, nullable: false })
-  keyword!: string;
+  keyword: string;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt!: Date;
+  createdAt: Date;
 
   @ManyToOne(() => User, (user) => user.keywordSubscriptions, {
     nullable: false,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })
-  user!: User;
+  user: User;
 }

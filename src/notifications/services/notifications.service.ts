@@ -5,11 +5,12 @@ import {
   KeywordSubscriptionsRepository,
   NotificationsRepository,
   SourceSubscriptionsRepository,
-} from '../notifications.repository';
+} from '../repositories/notifications.repository';
 import { KeywordSearchService } from './keyword-search.service';
+import { ExpoPushToken } from '../expo-push-token.type';
 
 interface NotificationMessage {
-  to: string;
+  to: ExpoPushToken;
   title?: string;
   body?: string;
   data?: Record<string, unknown>;
@@ -41,7 +42,10 @@ export class NotificationsService {
     if (!Expo.isExpoPushToken(expoPushToken)) {
       throw new BadRequestException('Invalid Expo push token');
     }
-    return this.notificationsRepository.saveExpoToken(userId, expoPushToken);
+    return this.notificationsRepository.saveExpoToken(
+      userId,
+      expoPushToken as ExpoPushToken,
+    );
   }
 
   async getKeywords(userId: string): Promise<string[]> {
@@ -62,7 +66,7 @@ export class NotificationsService {
     }
     return this.notificationsRepository.setActive(
       userId,
-      expoPushToken,
+      expoPushToken as ExpoPushToken,
       isActive,
     );
   }
@@ -266,7 +270,7 @@ export class NotificationsService {
       for (const token of tokens) {
         if (!Expo.isExpoPushToken(token)) continue;
         messages.push({
-          to: token,
+          to: token as ExpoPushToken,
           sound: 'default',
           title: `${labelStr} 관련 새 공지사항`,
           body,

@@ -29,7 +29,7 @@ export const extractNotices = async (
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         },
       });
-      const $ = cheerio.load(response.data);
+      const $ = cheerio.load(response.data as string);
 
       $(config.selectors.row).each((_, element) => {
         const titleEl = $(element).find(config.selectors.title);
@@ -93,7 +93,7 @@ export const extractNotices = async (
         let fullUrl = '';
         try {
           fullUrl = new URL(rawLink, targetUrl).toString();
-        } catch (e) {
+        } catch {
           fullUrl = rawLink; // 파싱 실패 시 원본 그대로 유지
         }
 
@@ -108,7 +108,7 @@ export const extractNotices = async (
         // 따라서 형식에 관계없이 같은 동작을 하도록 직접 연도/월/일을 추출해 로컬 자정으로 생성합니다.
         let postedAt: Date;
         const dateMatch = postedAtString.match(
-          /(\d{4})[\.\/-](\d{1,2})[\.\/-](\d{1,2})/,
+          /(\d{4})[./-](\d{1,2})[./-](\d{1,2})/,
         );
         if (dateMatch) {
           const y = Number(dateMatch[1]);
@@ -142,10 +142,11 @@ export const extractNotices = async (
           views: 0,
         });
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
       console.error(
         `[Scraper Extractor Error] ${config.code} - Page ${page} failed:`,
-        error.message,
+        message,
       );
     }
   }

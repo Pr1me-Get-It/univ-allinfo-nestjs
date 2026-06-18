@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsNumber, Max, Min } from 'class-validator';
 
-export class ScoreSubmitReqDto {
+export class SubmitScoreDto {
   @Type(() => Number)
   @IsNumber()
   @Min(0)
