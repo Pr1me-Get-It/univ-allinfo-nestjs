@@ -17,8 +17,9 @@ export class ScrapingOrchestratorService {
     private readonly notificationsService: NotificationsService,
   ) {}
 
-  // 06시부터 22시까지 매 4시간마다 실행
-  @Cron('0 6-22/4 * * *')
+  @Cron('0 6-22/4 * * *', {
+    timeZone: 'Asia/Seoul',
+  })
   async runAllScrapers() {
     if (this.isRunning) {
       this.logger.warn('이전 스크래핑 작업이 진행 중. 스킵합니다.');

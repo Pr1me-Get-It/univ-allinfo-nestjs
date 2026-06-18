@@ -5,33 +5,34 @@ import {
   Index,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import type { NullableDate } from '@src/common/types/nullable-date.type';
 
 @Entity('notices')
 @Index('IDX_NOTICE_SOURCE', ['source'])
 export class Notice {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
-  id!: string;
+  id: string;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
-  source!: string;
+  source: string;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
-  title!: string;
+  title: string;
 
   @Column({ type: 'text', nullable: false })
-  url!: string;
+  url: string;
 
   @Column({ name: 'posted_at', type: 'timestamp', nullable: false })
-  postedAt!: Date;
+  postedAt: Date;
 
   @Column({ type: 'int', nullable: false, default: 0 })
-  views!: number;
+  views: number;
 
   @Column({ type: 'timestamp', nullable: true })
-  kickoff!: Date | null;
+  kickoff: NullableDate;
 
   @Column({ type: 'timestamp', nullable: true })
-  deadline!: Date | null;
+  deadline: NullableDate;
 
   @Column({
     name: 'hashed_url',
@@ -40,8 +41,8 @@ export class Notice {
     unique: true,
     nullable: false,
   })
-  hashedUrl!: string;
+  hashedUrl: string;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt!: Date;
+  createdAt: Date;
 }

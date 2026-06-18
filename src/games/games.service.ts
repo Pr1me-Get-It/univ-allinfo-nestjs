@@ -8,6 +8,14 @@ import { College } from '@src/users/enums/college.enum';
 import { Department } from '@src/users/enums/department.enum';
 import { OnEvent } from '@nestjs/event-emitter';
 import { UsersService } from '@src/users/users.service';
+import type { GroupType } from './types/group-type.type';
+import { GameScoreLog } from './entities/game-score-log.entity';
+
+interface UserProfileCache {
+  nickname: string;
+  college: College;
+  department: Department;
+}
 
 @Injectable()
 export class GamesService {
@@ -20,10 +28,12 @@ export class GamesService {
     private readonly usersService: UsersService,
   ) {}
 
-  private async getUserProfileCache(userId: string) {
+  private async getUserProfileCache(
+    userId: string,
+  ): Promise<UserProfileCache | null> {
     const profileStr = await this.redis.hget('user:profiles', userId);
     if (profileStr) {
-      return JSON.parse(profileStr);
+      return JSON.parse(profileStr) as UserProfileCache;
     }
 
     const userProfile = await this.usersService.findProfileById(userId);
@@ -113,7 +123,9 @@ export class GamesService {
     const rawProfiles = await this.redis.hmget('user:profiles', ...userIds);
 
     return userIds.map((userId, idx) => {
-      const profile = rawProfiles[idx] ? JSON.parse(rawProfiles[idx]) : null;
+      const profile = rawProfiles[idx]
+        ? (JSON.parse(rawProfiles[idx]) as UserProfileCache)
+        : null;
       return {
         rank: idx + 1,
         userId,
@@ -125,11 +137,7 @@ export class GamesService {
     });
   }
 
-  async getGroupRankings(
-    gameType: GameType,
-    groupType: 'college' | 'department',
-    limit = 10,
-  ) {
+  async getGroupRankings(gameType: GameType, groupType: GroupType, limit = 10) {
     const targetKey =
       groupType === 'college'
         ? `ranking:${gameType}:colleges_total`
@@ -260,7 +268,9 @@ export class GamesService {
     if (length === 0) return;
 
     const rawLogs = await this.redis.lrange('buffer:score-logs', 0, length - 1);
-    const entitiesToInsert = rawLogs.map((log) => JSON.parse(log));
+    const entitiesToInsert = rawLogs.map(
+      (log) => JSON.parse(log) as Partial<GameScoreLog>,
+    );
 
     try {
       await this.gamesRepository.insert(entitiesToInsert);
@@ -268,9 +278,10 @@ export class GamesService {
       console.log(
         `[Batch] Flushed ${entitiesToInsert.length} score logs to the database.`,
       );
-    } catch (error) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
       console.log(
-        `[Batch] Failed to flush score logs to the database: ${error.message}`,
+        `[Batch] Failed to flush score logs to the database: ${message}`,
       );
     }
   }

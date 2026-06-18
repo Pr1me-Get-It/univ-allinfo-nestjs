@@ -8,11 +8,11 @@ import {
 @Entity('feedbacks')
 export class Feedback {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
-  id!: string;
+  id: string;
 
   @Column({ type: 'varchar', length: 500, nullable: false })
-  content!: string;
+  content: string;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt!: Date;
+  createdAt: Date;
 }

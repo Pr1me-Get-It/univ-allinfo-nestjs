@@ -20,18 +20,18 @@ export class UserProfile {
     length: 16,
     transformer: new UUIDTransformer(),
   })
-  userId!: string;
+  userId: string;
 
   @OneToOne(() => User, (user) => user.profile, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user!: User;
+  user: User;
 
   @Column({
     type: 'varchar',
     length: 50,
     nullable: false,
   })
-  nickname!: string;
+  nickname: string;
 
   @Column({
     type: 'enum',
@@ -48,8 +48,8 @@ export class UserProfile {
   department?: Department;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt!: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt!: Date;
+  updatedAt: Date;
 }

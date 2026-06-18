@@ -12,8 +12,8 @@ import { JwtGuard } from '@src/auth/guards/jwt.guard';
 import { CurrentUser } from '@src/auth/decorators/current-user.decorator';
 import { SaveExpoTokenDto } from './dto/save-expo-token.dto';
 import { SetExpoTokenActiveDto } from './dto/set-expo-token-active.dto';
-import { KeywordsDto } from './dto/keywords.dto';
-import { SourcesDto } from './dto/sources.dto';
+import { KeywordListDto } from './dto/keyword-list.dto';
+import { SourceListDto } from './dto/source-list.dto';
 
 @Controller('notifications')
 export class NotificationsController {
@@ -51,7 +51,7 @@ export class NotificationsController {
   @UseGuards(JwtGuard)
   async addKeywords(
     @CurrentUser('id') userId: string,
-    @Body() dto: KeywordsDto,
+    @Body() dto: KeywordListDto,
   ) {
     return this.notificationsService.saveKeywords(userId, dto.keywords);
   }
@@ -60,7 +60,7 @@ export class NotificationsController {
   @UseGuards(JwtGuard)
   async deleteKeywords(
     @CurrentUser('id') userId: string,
-    @Body() dto: KeywordsDto,
+    @Body() dto: KeywordListDto,
   ) {
     return this.notificationsService.deleteKeywords(userId, dto.keywords);
   }
@@ -73,7 +73,10 @@ export class NotificationsController {
 
   @Post('sources')
   @UseGuards(JwtGuard)
-  async addSources(@CurrentUser('id') userId: string, @Body() dto: SourcesDto) {
+  async addSources(
+    @CurrentUser('id') userId: string,
+    @Body() dto: SourceListDto,
+  ) {
     return this.notificationsService.saveSources(userId, dto.sources);
   }
 
@@ -81,7 +84,7 @@ export class NotificationsController {
   @UseGuards(JwtGuard)
   async deleteSources(
     @CurrentUser('id') userId: string,
-    @Body() dto: SourcesDto,
+    @Body() dto: SourceListDto,
   ) {
     return this.notificationsService.deleteSources(userId, dto.sources);
   }

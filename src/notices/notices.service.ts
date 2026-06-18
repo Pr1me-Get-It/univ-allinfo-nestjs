@@ -40,22 +40,25 @@ export class NoticesService {
         const decodedStr = Buffer.from(query.cursor, 'base64').toString(
           'utf-8',
         );
-        const decoded = JSON.parse(decodedStr);
+        const decoded = JSON.parse(decodedStr) as {
+          postedAt: unknown;
+          id: unknown;
+        };
 
         if (!decoded.postedAt || !decoded.id) {
           throw new Error('Invalid cursor format');
         }
 
-        const cursorDate = new Date(decoded.postedAt);
+        const cursorDate = new Date(decoded.postedAt as string);
         if (isNaN(cursorDate.getTime())) {
           throw new Error('Invalid date in cursor');
         }
 
         cursorData = {
           postedAt: cursorDate,
-          id: decoded.id,
+          id: decoded.id as string,
         };
-      } catch (e) {
+      } catch {
         throw new BadRequestException('Invalid cursor format');
       }
     }

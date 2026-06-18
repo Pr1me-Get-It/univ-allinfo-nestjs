@@ -6,11 +6,11 @@ import {
   MaxLength,
 } from 'class-validator';
 
-export class KeywordsDto {
+export class SourceListDto {
   @IsArray()
   @ArrayMinSize(1)
-  @ArrayMaxSize(50)
+  @ArrayMaxSize(20)
   @IsString({ each: true })
   @MaxLength(64, { each: true })
-  keywords: string[];
+  sources: string[];
 }

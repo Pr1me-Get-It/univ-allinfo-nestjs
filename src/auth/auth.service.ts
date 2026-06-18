@@ -9,7 +9,7 @@ import * as crypto from 'crypto';
 import { UsersService } from '@src/users/users.service';
 import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
-import { HumanReadableTime } from '@src/common/types';
+import { HumanReadableTime } from '@src/common/types/time.type';
 import appleSignin from 'apple-signin-auth';
 import { OauthProvider } from '@src/users/enums/oauth-provider.enum';
 import { LoginResponseDto } from './dto/login-response.dto';
@@ -42,7 +42,7 @@ export class AuthService {
         authorizationCode,
         {
           clientID: this.configService.get<string>('APPLE_CLIENT_ID')!,
-          clientSecret: await this.GetAppleSecretClient(),
+          clientSecret: this.getAppleSecretClient(),
           redirectUri: '', // 에러 방지용 더미 데이터
         },
       );
@@ -61,11 +61,12 @@ export class AuthService {
         tokens.refreshToken,
         user,
       );
-    } catch (error: any) {
-      console.error('[AuthService][appleLogin] 에러 메시지:', error?.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error('[AuthService][appleLogin] 에러 메시지:', message);
       throw new UnauthorizedException(
         '애플 로그인 토큰이 유효하지 않거나 위조되었습니다.',
-        error.message,
+        message,
       );
     }
   }
@@ -141,7 +142,7 @@ export class AuthService {
         user.appleRefreshToken.appleRefreshToken,
         {
           clientID: this.configService.get<string>('APPLE_CLIENT_ID')!,
-          clientSecret: await this.GetAppleSecretClient(),
+          clientSecret: this.getAppleSecretClient(),
           tokenTypeHint: 'refresh_token',
         },
       );
@@ -178,7 +179,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  private async GetAppleSecretClient(): Promise<string> {
+  private getAppleSecretClient(): string {
     return appleSignin.getClientSecret({
       clientID: this.configService.get<string>('APPLE_CLIENT_ID')!,
       teamID: this.configService.get<string>('APPLE_TEAM_ID')!,

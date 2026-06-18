@@ -13,7 +13,7 @@ import { User } from '../../users/entities/user.entity';
 @Entity('expo_tokens')
 export class ExpoToken {
   @PrimaryGeneratedColumn({ name: 'id', type: 'bigint', unsigned: true })
-  id!: number;
+  id: number;
 
   @Column({
     name: 'user_id',
@@ -21,7 +21,7 @@ export class ExpoToken {
     length: 16,
     transformer: new UUIDTransformer(),
   })
-  userId!: string;
+  userId: string;
 
   @Column({
     name: 'expo_push_token',
@@ -30,7 +30,7 @@ export class ExpoToken {
     nullable: false,
     unique: true,
   })
-  expoPushToken!: string;
+  expoPushToken: string;
 
   @Column({
     name: 'is_active',
@@ -38,18 +38,18 @@ export class ExpoToken {
     default: true,
     nullable: false,
   })
-  isActive!: boolean;
+  isActive: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt!: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt!: Date;
+  updatedAt: Date;
 
   @ManyToOne(() => User, (user) => user.expoTokens, {
     nullable: false,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })
-  user!: User;
+  user: User;
 }

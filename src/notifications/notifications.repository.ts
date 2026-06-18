@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ExpoToken } from './entities/expo-token.entity';
 import { Repository, DataSource, In } from 'typeorm';
-import { KeywordSubscription } from './entities/keyword-subscriptions.entity';
+import { KeywordSubscription } from './entities/keyword-subscription.entity';
 import { SourceSubscription } from './entities/source-subscription.entity';
 import { UUIDTransformer } from '@src/common/transformers/uuid.transformer';
+import { ExpoPushToken } from './types/expo-push-token.type';
 
 const uuidTransformer = new UUIDTransformer();
 
@@ -17,7 +18,10 @@ export class NotificationsRepository extends Repository<ExpoToken> {
     return this.find({ where: { userId } });
   }
 
-  async saveExpoToken(userId: string, expoPushToken: string): Promise<void> {
+  async saveExpoToken(
+    userId: string,
+    expoPushToken: ExpoPushToken,
+  ): Promise<void> {
     await this.createQueryBuilder()
       .insert()
       .into(ExpoToken)
@@ -33,7 +37,7 @@ export class NotificationsRepository extends Repository<ExpoToken> {
 
   async setActive(
     userId: string,
-    expoPushToken: string,
+    expoPushToken: ExpoPushToken,
     isActive: boolean,
   ): Promise<void> {
     await this.update({ userId, expoPushToken }, { isActive });

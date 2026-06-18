@@ -16,7 +16,7 @@ import { Exclude } from 'class-transformer';
 import { UserAppleRefreshToken } from './user-apple-rt.entity';
 import { ExpoToken } from '@src/notifications/entities/expo-token.entity';
 import { SourceSubscription } from '@src/notifications/entities/source-subscription.entity';
-import { KeywordSubscription } from '@src/notifications/entities/keyword-subscriptions.entity';
+import { KeywordSubscription } from '@src/notifications/entities/keyword-subscription.entity';
 
 @Entity('users')
 @Unique(['provider', 'providerId'])
@@ -26,14 +26,14 @@ export class User {
     length: 16,
     transformer: new UUIDTransformer(),
   })
-  id!: string;
+  id: string;
 
   // 같은 이메일로 다른 provider 가입 허용
   @Column({ type: 'varchar', length: 255, unique: false, nullable: false })
-  email!: string;
+  email: string;
 
   @Column({ type: 'enum', enum: OauthProvider, nullable: false })
-  provider!: OauthProvider;
+  provider: OauthProvider;
 
   @Exclude()
   @Column({
@@ -42,7 +42,7 @@ export class User {
     length: 128,
     nullable: false,
   })
-  providerId!: string;
+  providerId: string;
 
   @Exclude()
   @Column({
@@ -55,7 +55,7 @@ export class User {
   hashedRefreshToken?: string | null;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt!: Date;
+  createdAt: Date;
 
   // UserProfile과 1:1 관계 설정
   @OneToOne(() => UserProfile, (profile) => profile.user, { cascade: true })
