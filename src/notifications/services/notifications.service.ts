@@ -5,9 +5,9 @@ import {
   KeywordSubscriptionsRepository,
   NotificationsRepository,
   SourceSubscriptionsRepository,
-} from '../notifications.repository';
+} from '../repositories/notifications.repository';
 import { KeywordSearchService } from './keyword-search.service';
-import { ExpoPushToken } from '../types/expo-push-token.type';
+import { ExpoPushToken } from '../expo-push-token.type';
 
 interface NotificationMessage {
   to: ExpoPushToken;

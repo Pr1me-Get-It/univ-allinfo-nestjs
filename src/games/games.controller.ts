@@ -14,7 +14,7 @@ import { CurrentUser } from '@src/auth/decorators/current-user.decorator';
 import { GameType } from './enums/game-type.enum';
 import { SubmitScoreDto } from './dto/score-submit.dto';
 import { RankingsQueryDto } from './dto/rankings-query.dto';
-import type { GroupType } from './types/group-type.type';
+import { GroupType } from './enums/group-type.enum';
 
 @Controller('games')
 export class GamesController {
@@ -57,7 +57,7 @@ export class GamesController {
   @Get(':type/rankings/:groupType')
   async getGroupRankings(
     @Param('type', new ParseEnumPipe(GameType)) gameType: GameType,
-    @Param('groupType', new ParseEnumPipe(['college', 'department']))
+    @Param('groupType', new ParseEnumPipe(GroupType))
     groupType: GroupType,
   ) {
     return this.gamesService.getGroupRankings(gameType, groupType);

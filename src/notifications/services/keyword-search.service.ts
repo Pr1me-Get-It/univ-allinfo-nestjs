@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import AhoCorasick from 'modern-ahocorasick';
-import { KeywordSubscriptionsRepository } from '../notifications.repository';
+import { KeywordSubscriptionsRepository } from '../repositories/notifications.repository';
 
 @Injectable()
 export class KeywordSearchService implements OnModuleInit {

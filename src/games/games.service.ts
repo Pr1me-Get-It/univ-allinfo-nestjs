@@ -8,7 +8,7 @@ import { College } from '@src/users/enums/college.enum';
 import { Department } from '@src/users/enums/department.enum';
 import { OnEvent } from '@nestjs/event-emitter';
 import { UsersService } from '@src/users/users.service';
-import type { GroupType } from './types/group-type.type';
+import { GroupType } from './enums/group-type.enum';
 import { GameScoreLog } from './entities/game-score-log.entity';
 
 interface UserProfileCache {
@@ -139,7 +139,7 @@ export class GamesService {
 
   async getGroupRankings(gameType: GameType, groupType: GroupType, limit = 10) {
     const targetKey =
-      groupType === 'college'
+      groupType === GroupType.COLLEGE
         ? `ranking:${gameType}:colleges_total`
         : `ranking:${gameType}:departments_total`;
 

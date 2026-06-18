@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { ExpoToken } from './entities/expo-token.entity';
+import { ExpoToken } from '../entities/expo-token.entity';
 import { Repository, DataSource, In } from 'typeorm';
-import { KeywordSubscription } from './entities/keyword-subscription.entity';
-import { SourceSubscription } from './entities/source-subscription.entity';
+import { KeywordSubscription } from '../entities/keyword-subscription.entity';
+import { SourceSubscription } from '../entities/source-subscription.entity';
 import { UUIDTransformer } from '@src/common/transformers/uuid.transformer';
-import { ExpoPushToken } from './types/expo-push-token.type';
+import { ExpoPushToken } from '../expo-push-token.type';
 
 const uuidTransformer = new UUIDTransformer();
 
