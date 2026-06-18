@@ -80,12 +80,7 @@ export class KeywordSubscriptionsRepository extends Repository<KeywordSubscripti
 
   async deleteMany(userId: string, keywords: string[]): Promise<number> {
     if (keywords.length === 0) return 0;
-    const result = await this.createQueryBuilder()
-      .delete()
-      .from(KeywordSubscription)
-      .where('user_id = :userId', { userId })
-      .andWhere('keyword IN (:...keywords)', { keywords })
-      .execute();
+    const result = await this.delete({ userId, keyword: In(keywords) });
     return result.affected ?? 0;
   }
 
@@ -150,12 +145,7 @@ export class SourceSubscriptionsRepository extends Repository<SourceSubscription
 
   async deleteMany(userId: string, sources: string[]): Promise<number> {
     if (sources.length === 0) return 0;
-    const result = await this.createQueryBuilder()
-      .delete()
-      .from(SourceSubscription)
-      .where('user_id = :userId', { userId })
-      .andWhere('source IN (:...sources)', { sources })
-      .execute();
+    const result = await this.delete({ userId, source: In(sources) });
     return result.affected ?? 0;
   }
 

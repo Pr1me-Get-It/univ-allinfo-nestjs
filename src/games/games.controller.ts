@@ -13,6 +13,7 @@ import { JwtGuard } from '@src/auth/guards/jwt.guard';
 import { CurrentUser } from '@src/auth/decorators/current-user.decorator';
 import { GameType } from './enums/game-type.enum';
 import { ScoreSubmitReqDto } from './dto/scoreSubmit.dto';
+import { RankingsQueryDto } from './dto/rankings-query.dto';
 
 @Controller('games')
 export class GamesController {
@@ -37,9 +38,9 @@ export class GamesController {
   @Get(':type/rankings/global')
   async getRankings(
     @Param('type', new ParseEnumPipe(GameType)) gameType: GameType,
-    @Query('limit') limit: number = 10,
+    @Query() query: RankingsQueryDto,
   ) {
-    return this.gamesService.getTopRankings(gameType, limit);
+    return this.gamesService.getTopRankings(gameType, query.limit);
   }
 
   @Get(':type/rankings/me')

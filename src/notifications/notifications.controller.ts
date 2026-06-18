@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  ParseBoolPipe,
   Patch,
   Post,
   UseGuards,
@@ -11,6 +10,10 @@ import {
 import { NotificationsService } from './services/notifications.service';
 import { JwtGuard } from '@src/auth/guards/jwt.guard';
 import { CurrentUser } from '@src/auth/decorators/current-user.decorator';
+import { SaveExpoTokenDto } from './dto/save-expo-token.dto';
+import { SetExpoTokenActiveDto } from './dto/set-expo-token-active.dto';
+import { KeywordsDto } from './dto/keywords.dto';
+import { SourcesDto } from './dto/sources.dto';
 
 @Controller('notifications')
 export class NotificationsController {
@@ -20,22 +23,21 @@ export class NotificationsController {
   @UseGuards(JwtGuard)
   async saveExpoToken(
     @CurrentUser('id') userId: string,
-    @Body('expoPushToken') expoPushToken: string,
+    @Body() dto: SaveExpoTokenDto,
   ) {
-    await this.notificationsService.saveExpoToken(userId, expoPushToken);
+    await this.notificationsService.saveExpoToken(userId, dto.expoPushToken);
   }
 
   @Patch('expo-token')
   @UseGuards(JwtGuard)
   async setExpoTokenActive(
     @CurrentUser('id') userId: string,
-    @Body('expoPushToken') expoPushToken: string,
-    @Body('isActive', ParseBoolPipe) isActive: boolean,
+    @Body() dto: SetExpoTokenActiveDto,
   ) {
     await this.notificationsService.setExpoTokenActive(
       userId,
-      expoPushToken,
-      isActive,
+      dto.expoPushToken,
+      dto.isActive,
     );
   }
 
@@ -49,18 +51,18 @@ export class NotificationsController {
   @UseGuards(JwtGuard)
   async addKeywords(
     @CurrentUser('id') userId: string,
-    @Body('keywords') keywords: string[],
+    @Body() dto: KeywordsDto,
   ) {
-    return await this.notificationsService.saveKeywords(userId, keywords);
+    return this.notificationsService.saveKeywords(userId, dto.keywords);
   }
 
   @Delete('keywords')
   @UseGuards(JwtGuard)
   async deleteKeywords(
     @CurrentUser('id') userId: string,
-    @Body('keywords') keywords: string[],
+    @Body() dto: KeywordsDto,
   ) {
-    return await this.notificationsService.deleteKeywords(userId, keywords);
+    return this.notificationsService.deleteKeywords(userId, dto.keywords);
   }
 
   @Get('sources')
@@ -71,19 +73,16 @@ export class NotificationsController {
 
   @Post('sources')
   @UseGuards(JwtGuard)
-  async addSources(
-    @CurrentUser('id') userId: string,
-    @Body('sources') sources: string[],
-  ) {
-    return await this.notificationsService.saveSources(userId, sources);
+  async addSources(@CurrentUser('id') userId: string, @Body() dto: SourcesDto) {
+    return this.notificationsService.saveSources(userId, dto.sources);
   }
 
   @Delete('sources')
   @UseGuards(JwtGuard)
   async deleteSources(
     @CurrentUser('id') userId: string,
-    @Body('sources') sources: string[],
+    @Body() dto: SourcesDto,
   ) {
-    return await this.notificationsService.deleteSources(userId, sources);
+    return this.notificationsService.deleteSources(userId, dto.sources);
   }
 }
