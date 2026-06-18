@@ -26,7 +26,7 @@ export class NotificationsRepository extends Repository<ExpoToken> {
       .insert()
       .into(ExpoToken)
       .values({ userId, expoPushToken })
-      .orIgnore()
+      .orUpdate(['user_id'], ['expo_push_token'])
       .execute();
   }
 
