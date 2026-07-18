@@ -41,7 +41,7 @@
 2. App Store Connect에서 **App Transfer**로 앱을 조직 계정에 연결
    - 번들 ID, 버전 기록, 리뷰 기록은 유지됨 / 인앱결제·일부 분석 데이터는 이전 안 됨
 3. 조직 계정 명의로 서명키 재발급:
-   - `secrets/AuthKey_9FR2S6G86R.p8 복사본` → 신규 발급 키로 교체
+   - `secrets/AuthKey_9FR2S6G86R.p8` → 신규 발급 키로 교체
    - `.env`의 `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY` 갱신
 
 ---
@@ -69,7 +69,7 @@
 
 이 폴더는 `.gitignore`에 등록되어 있어 git에는 없음. 안전한 채널(비밀번호 관리자 공유 등)로 전달 — 채팅/이메일 평문 전달 금지.
 
-- `AuthKey_9FR2S6G86R.p8 복사본` — Apple 서명키 (재발급 시 폐기 가능)
+- `AuthKey_9FR2S6G86R.p8` — Apple 서명키 (재발급 시 폐기 가능)
 - `client_secret_*.json` — Google OAuth secret (재발급 시 폐기 가능)
 - `univallinfo-api.pem` — DigitalOcean 서버 SSH 키 (신규 키 등록 시 폐기 가능)
 
