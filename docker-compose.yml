@@ -13,6 +13,7 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     command: sh -c "npm run migration:run && exec npm run start:dev"
+    restart: on-failure
     env_file:
       - .env
     environment:
