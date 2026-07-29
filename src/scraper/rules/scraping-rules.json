@@ -2108,5 +2108,27 @@
       "title": ".subject a",
       "date": "td:nth-child(5)"
     }
+  },
+  {
+    "code": "ENE",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학부 공지사항",
+        "path": "/HOME/soee/sub.htm?nav_code=soe1622609908"
+      },
+      {
+        "name": "대학원 공지사항",
+        "path": "/HOME/soee/sub.htm?nav_code=soe1622609907"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
   }
 ]
