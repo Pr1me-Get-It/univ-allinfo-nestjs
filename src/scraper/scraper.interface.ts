@@ -9,7 +9,10 @@ export interface ScrapeConfig {
   selectors: {
     row: string; // 반복되는 각 공지글 묶음 (예: 'tbody tr' 또는 'ul > li')
     isFixed: string; // 공지/상단고정글 판단 기준 (예: '.notice_icon')
-    title: string; // 제목 엘리먼트 (예: 'td.subject a' 또는 '.title-text')
+    title: string; // 링크(href) 추출용 앵커 엘리먼트 (예: 'td.subject a' 또는 '.title-text')
     date: string; // 날짜 엘리먼트 (예: 'td.date')
+    // title 엘리먼트 안에 뱃지/본문 미리보기가 섞여 있어 텍스트만 별도로 뽑아야 하는 경우 사용
+    titleText?: string; // 제목 텍스트 전용 엘리먼트 (미지정 시 title 엘리먼트 텍스트 사용)
+    titleTextExclude?: string; // titleText 안에서 제외할 하위 엘리먼트 (예: 뱃지 span)
   };
 }

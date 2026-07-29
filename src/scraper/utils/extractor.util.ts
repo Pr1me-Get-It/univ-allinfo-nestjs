@@ -33,8 +33,17 @@ export const extractNotices = async (
 
       $(config.selectors.row).each((_, element) => {
         const titleEl = $(element).find(config.selectors.title);
+
+        // 제목 엘리먼트 안에 뱃지/본문 미리보기 등이 섞여 있는 사이트는
+        // titleText(+titleTextExclude)로 텍스트만 별도로 뽑아냄
+        const titleTextEl = config.selectors.titleText
+          ? $(element).find(config.selectors.titleText).clone()
+          : titleEl.clone();
+        if (config.selectors.titleTextExclude) {
+          titleTextEl.find(config.selectors.titleTextExclude).remove();
+        }
         // 제목의 보기 흉한 줄바꿈과 다중 스페이스를 하나의 공백으로 압축합니다 (깔끔한 UI 제공)
-        const title = titleEl
+        const title = titleTextEl
           .text()
           .replace(/[\n\t\r]+/g, ' ')
           .replace(/\s+/g, ' ')

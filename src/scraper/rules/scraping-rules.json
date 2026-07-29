@@ -1976,5 +1976,137 @@
       "title": ".subject a",
       "date": "td:nth-child(5)"
     }
+  },
+  {
+    "code": "CLA",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학부 공지사항",
+        "path": "/HOME/hanmun/sub.htm?nav_code=han1624361542"
+      },
+      {
+        "name": "대학원 공지사항",
+        "path": "/HOME/hanmun/sub.htm?nav_code=han1624361547"
+      },
+      {
+        "name": "답사자료실",
+        "path": "/HOME/hanmun/sub.htm?nav_code=han1624361562"
+      },
+      {
+        "name": "취업게시판",
+        "path": "/HOME/hanmun/sub.htm?nav_code=han1626401627"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "CHN",
+    "baseUrl": "https://chinese.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/bbs/board.php?bo_table=notice"
+      },
+      {
+        "name": "취업게시판",
+        "path": "/bbs/board.php?bo_table=job"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": "li:has(article.bo_info)",
+      "isFixed": ".notice_box",
+      "title": "a",
+      "titleText": "h2",
+      "titleTextExclude": ".category",
+      "date": ".date"
+    }
+  },
+  {
+    "code": "GOL",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/geology/sub.htm?nav_code=geo1621814864"
+      },
+      {
+        "name": "서식자료실",
+        "path": "/HOME/geology/sub.htm?nav_code=geo1621814862"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "AST",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학과공지사항",
+        "path": "/HOME/hanl/sub.htm?nav_code=han1769127610"
+      },
+      {
+        "name": "일반공지사항",
+        "path": "/HOME/hanl/sub.htm?nav_code=han1622609884"
+      },
+      {
+        "name": "수업자료실",
+        "path": "/HOME/hanl/sub.htm?nav_code=han1622609882"
+      },
+      {
+        "name": "채용공고",
+        "path": "/HOME/hanl/sub.htm?nav_code=han1622609880"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "OCN",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/ocean/sub.htm?nav_code=oce1623632597"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/ocean/sub.htm?nav_code=oce1623632596"
+      },
+      {
+        "name": "취업게시판",
+        "path": "/HOME/ocean/sub.htm?nav_code=oce1623632594"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
   }
 ]
