@@ -800,5 +800,117 @@
       "title": ".subject a",
       "date": "td:nth-child(5)"
     }
+  },
+  {
+    "code": "MAT",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/math/sub.htm?nav_code=mat1623029308"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "PHY",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/physics/sub.htm?nav_code=phy1645592197"
+      },
+      {
+        "name": "취업정보게시판",
+        "path": "/HOME/physics/sub.htm?nav_code=phy1645592827"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "CHM",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/chem/sub.htm?nav_code=che1622521080"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "BIO",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/bio/sub.htm?nav_code=bio1616117151"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "STA",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/stat/sub.htm?nav_code=sta1623632390"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "BTC",
+    "baseUrl": "https://biotech.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/bbs/board.php?bo_table=sub6_1"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": "table tbody tr:not(:first-child)",
+      "isFixed": "img[alt=\"공지\"]",
+      "title": "td:nth-child(2) a:not(.bo_cate_link)",
+      "date": "td:nth-child(3)"
+    }
   }
 ]
