@@ -1728,5 +1728,149 @@
       "title": ".subject a",
       "date": "td:nth-child(5)"
     }
+  },
+  {
+    "code": "MEX",
+    "baseUrl": "https://med.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/pages/sub.htm?nav_code=knu1670583748"
+      },
+      {
+        "name": "자료실",
+        "path": "/pages/sub.htm?nav_code=knu1670415085"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board-list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": ".date"
+    }
+  },
+  {
+    "code": "DEN",
+    "baseUrl": "https://dent.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/sub/board.html?bid=k1news"
+      }
+    ],
+    "pageParam": "&gotoPage=",
+    "maxPage": 1,
+    "selectors": {
+      "row": "table.boardtable tbody tr",
+      "isFixed": "img[alt=\"NOTICE\"]",
+      "title": ".tit a",
+      "date": "td:nth-child(3)"
+    }
+  },
+  {
+    "code": "VET",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "대학공지",
+        "path": "/HOME/veterinary/sub.htm?nav_code=vet1623200226"
+      },
+      {
+        "name": "대학원공지",
+        "path": "/HOME/veterinary/sub.htm?nav_code=vet1623200225"
+      },
+      {
+        "name": "공지사항",
+        "path": "/HOME/veterinary/sub.htm?nav_code=vet1623200224"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/veterinary/sub.htm?nav_code=vet1623236651"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "CHD",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학부 공지사항",
+        "path": "/HOME/knuchild/sub.htm?nav_code=knu1623370362"
+      },
+      {
+        "name": "대학원 공지사항",
+        "path": "/HOME/knuchild/sub.htm?nav_code=knu1623370359"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/knuchild/sub.htm?nav_code=knu1623370361"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "FAS",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/fashion/sub.htm?nav_code=fas1623134444"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/fashion/sub.htm?nav_code=fas1623134443"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "NUT",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/fsnu/sub.htm?nav_code=fsn1622459812"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/fsnu/sub.htm?nav_code=fsn1622459811"
+      },
+      {
+        "name": "행사 및 세미나",
+        "path": "/HOME/fsnu/sub.htm?nav_code=fsn1622459810"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
   }
 ]
