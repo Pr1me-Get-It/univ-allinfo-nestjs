@@ -538,5 +538,53 @@
       "title": ".subject a",
       "date": "td:nth-child(5)"
     }
+  },
+  {
+    "code": "ANT",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학부공지",
+        "path": "/HOME/aran/sub.htm?nav_code=ara1623718660"
+      },
+      {
+        "name": "대학원공지",
+        "path": "/HOME/aran/sub.htm?nav_code=ara1623749592"
+      },
+      {
+        "name": "장학 및 취업",
+        "path": "/HOME/aran/sub.htm?nav_code=ara1623749625"
+      },
+      {
+        "name": "취업수기",
+        "path": "/HOME/aran/sub.htm?nav_code=ara1623749642"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "JPN",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/japan/sub.htm?nav_code=jap1695016568"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
   }
 ]
