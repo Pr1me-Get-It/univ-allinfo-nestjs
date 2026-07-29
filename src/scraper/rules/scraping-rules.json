@@ -30,6 +30,50 @@
     }
   },
   {
+    "code": "KNU_NEWS",
+    "baseUrl": "https://www.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학사공지",
+        "path": "/wbbs/wbbs/bbs/btin/stdList.action?menu_idx=42"
+      },
+      {
+        "name": "공지사항",
+        "path": "/wbbs/wbbs/bbs/btin/list.action?bbs_cde=1&menu_idx=67"
+      }
+    ],
+    "pageParam": "&pageIndex=",
+    "maxPage": 1,
+    "selectors": {
+      "row": "table tbody tr",
+      "isFixed": ".num.notice",
+      "title": ".subject a",
+      "date": ".date"
+    }
+  },
+  {
+    "code": "STRT",
+    "baseUrl": "https://changup.knu.ac.kr",
+    "boards": [
+      {
+        "name": "센터공지사항",
+        "path": "/changup/Board?menuId=MENU_CHANGUP0051"
+      },
+      {
+        "name": "외부공지사항",
+        "path": "/changup/Board2?menuId=MENU_CHANGUP0053"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": "table tbody tr",
+      "isFixed": ".badge-notice",
+      "title": ".td-subj a",
+      "date": ".td-writeDate"
+    }
+  },
+  {
     "code": "BIZS",
     "baseUrl": "https://startup.knu.ac.kr",
     "boards": [
@@ -124,6 +168,24 @@
     }
   },
   {
+    "code": "SPRT",
+    "baseUrl": "https://sports.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/pages/board/list.php?board_sid=1"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": "table tbody tr:not(:first-child)",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": "td:nth-child(2) a",
+      "date": "td:nth-child(4)"
+    }
+  },
+  {
     "code": "COOP",
     "baseUrl": "https://coop.knu.ac.kr",
     "boards": [
@@ -138,6 +200,54 @@
       "row": "table tbody tr",
       "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
       "title": "td.subject a",
+      "date": "td:nth-child(4)"
+    }
+  },
+  {
+    "code": "TCHR",
+    "baseUrl": "https://ctl.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/web/community/community01.php"
+      }
+    ],
+    "pageParam": "?page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": "table tbody tr:not(:first-child)",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": "td:nth-child(2) a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "SEE",
+    "baseUrl": "https://see.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/content/board/notice.html"
+      },
+      {
+        "name": "세미나",
+        "path": "/content/board/seminar.html"
+      },
+      {
+        "name": "취업",
+        "path": "/content/board/employment.html"
+      },
+      {
+        "name": "정보사랑방",
+        "path": "/content/board/information.html"
+      }
+    ],
+    "pageParam": "?page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": "table tbody tr:not(:first-child)",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": "td.left a",
       "date": "td:nth-child(4)"
     }
   },
