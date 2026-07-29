@@ -17,7 +17,7 @@ export class ScrapingOrchestratorService {
     private readonly notificationsService: NotificationsService,
   ) {}
 
-  @Cron('0 6-22/4 * * *', {
+  @Cron('0 18 * * *', {
     timeZone: 'Asia/Seoul',
   })
   async runAllScrapers() {
