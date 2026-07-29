@@ -2130,5 +2130,35 @@
       "title": ".subject a",
       "date": "td:nth-child(5)"
     }
+  },
+  {
+    "code": "FRE",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/knuagec/sub.htm?nav_code=knu1623134126"
+      },
+      {
+        "name": "취업현황(학부)",
+        "path": "/HOME/knuagec/sub.htm?nav_code=knu1724719098"
+      },
+      {
+        "name": "취업현황(대학원)",
+        "path": "/HOME/knuagec/sub.htm?nav_code=knu1724719110"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/knuagec/sub.htm?nav_code=knu1623134125"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
   }
 ]
