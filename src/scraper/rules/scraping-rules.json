@@ -912,5 +912,65 @@
       "title": "td:nth-child(2) a:not(.bo_cate_link)",
       "date": "td:nth-child(3)"
     }
+  },
+  {
+    "code": "ECO",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학부 공지사항",
+        "path": "/HOME/econ/sub.htm?nav_code=eco1623370509"
+      },
+      {
+        "name": "대학원 공지사항",
+        "path": "/HOME/econ/sub.htm?nav_code=eco1623370508"
+      },
+      {
+        "name": "학부세미나",
+        "path": "/HOME/econ/sub.htm?nav_code=eco1623370507"
+      },
+      {
+        "name": "취업정보",
+        "path": "/HOME/econ/sub.htm?nav_code=eco1624512921"
+      },
+      {
+        "name": "특성화(CK)사업",
+        "path": "/HOME/econ/sub.htm?nav_code=eco1624512926"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "BIZ",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학부 공지사항",
+        "path": "/HOME/kbiz/sub.htm?nav_code=kbi1623370557"
+      },
+      {
+        "name": "대학원 공지사항",
+        "path": "/HOME/kbiz/sub.htm?nav_code=kbi1624514018"
+      },
+      {
+        "name": "취업정보",
+        "path": "/HOME/kbiz/sub.htm?nav_code=kbi1623370555"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
   }
 ]
