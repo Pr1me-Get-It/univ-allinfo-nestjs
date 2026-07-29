@@ -1872,5 +1872,109 @@
       "title": ".subject a",
       "date": "td:nth-child(5)"
     }
+  },
+  {
+    "code": "NUR",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/nurse/sub.htm?nav_code=nur1624533185"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/nurse/sub.htm?nav_code=nur1624533310"
+      },
+      {
+        "name": "취업정보",
+        "path": "/HOME/nurse/sub.htm?nav_code=nur1623200259"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "PHA",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/knupharmacy/sub.htm?nav_code=knu1623650948"
+      },
+      {
+        "name": "장학정보",
+        "path": "/HOME/knupharmacy/sub.htm?nav_code=knu1624519917"
+      },
+      {
+        "name": "서식자료실",
+        "path": "/HOME/knupharmacy/sub.htm?nav_code=knu1624519936"
+      },
+      {
+        "name": "취업정보",
+        "path": "/HOME/knupharmacy/sub.htm?nav_code=knu1623650945"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "PAD",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/puad/sub.htm?nav_code=pua1623029519"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/puad/sub.htm?nav_code=pua1623029518"
+      },
+      {
+        "name": "오송장학금",
+        "path": "/HOME/puad/sub.htm?nav_code=pua1675769595"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "UDM",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/udm/sub.htm?nav_code=udm1623371432"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/udm/sub.htm?nav_code=udm1623371431"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
   }
 ]
