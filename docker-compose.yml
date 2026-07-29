@@ -12,7 +12,8 @@ services:
       # 로컬 코드를 컨테이너에 동기화 (Hot Reload용)
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    command: npm run start:dev
+    command: sh -c "npm run migration:run && exec npm run start:dev"
+    restart: on-failure
     env_file:
       - .env
     environment:
