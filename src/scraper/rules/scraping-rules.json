@@ -1236,5 +1236,153 @@
       "title": ".subject a",
       "date": "td:nth-child(5)"
     }
+  },
+  {
+    "code": "HOR",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/horti/sub.htm?nav_code=hor1622609861"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/horti/sub.htm?nav_code=hor1622609860"
+      },
+      {
+        "name": "취업정보",
+        "path": "/HOME/horti/sub.htm?nav_code=hor1622609858"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "AGM",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/acen/sub.htm?nav_code=ace1622521462"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/acen/sub.htm?nav_code=ace1622521461"
+      },
+      {
+        "name": "행사안내",
+        "path": "/HOME/acen/sub.htm?nav_code=ace1622521460"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "SBG",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/bime/sub.htm?nav_code=bim1622180687"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/bime/sub.htm?nav_code=bim1622180686"
+      },
+      {
+        "name": "취업공고",
+        "path": "/HOME/bime/sub.htm?nav_code=bim1689583644"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "BFS",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/biofiber/sub.htm?nav_code=bio1623029353"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/biofiber/sub.htm?nav_code=bio1623029352"
+      },
+      {
+        "name": "취업정보",
+        "path": "/HOME/biofiber/sub.htm?nav_code=bio1653980887"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "AIF",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/aifm/sub.htm?nav_code=aif1623029616"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/aifm/sub.htm?nav_code=aif1623029615"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "PMD",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/plantmed/sub.htm?nav_code=pla1677024917"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/plantmed/sub.htm?nav_code=pla1677024916"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
   }
 ]
