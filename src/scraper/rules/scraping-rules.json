@@ -586,5 +586,219 @@
       "title": ".subject a",
       "date": "td:nth-child(5)"
     }
+  },
+  {
+    "code": "POL",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학부 공지사항",
+        "path": "/HOME/politics/sub.htm?nav_code=pol1614071864"
+      },
+      {
+        "name": "일반대학원 공지사항",
+        "path": "/HOME/politics/sub.htm?nav_code=pol1652853073"
+      },
+      {
+        "name": "특수대학원 공지사항",
+        "path": "/HOME/politics/sub.htm?nav_code=pol1652853098"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/politics/sub.htm?nav_code=pol1614071863"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "SOC",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학부 공지사항",
+        "path": "/HOME/socio/sub.htm?nav_code=soc1622181477"
+      },
+      {
+        "name": "대학원 공지사항",
+        "path": "/HOME/socio/sub.htm?nav_code=soc1663205709"
+      },
+      {
+        "name": "사회정책대학원 공지사항",
+        "path": "/HOME/socio/sub.htm?nav_code=soc1738714168"
+      },
+      {
+        "name": "행사ㆍ프로그램 안내",
+        "path": "/HOME/socio/sub.htm?nav_code=soc1738714135"
+      },
+      {
+        "name": "장학금 안내",
+        "path": "/HOME/socio/sub.htm?nav_code=soc1622181475"
+      },
+      {
+        "name": "취업정보 안내",
+        "path": "/HOME/socio/sub.htm?nav_code=soc1738714146"
+      },
+      {
+        "name": "언론에 비친 사회학과",
+        "path": "/HOME/socio/sub.htm?nav_code=soc1738714159"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "GEO",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학부 공지사항",
+        "path": "/HOME/geog/sub.htm?nav_code=geo1614082611"
+      },
+      {
+        "name": "일반대학원 공지사항",
+        "path": "/HOME/geog/sub.htm?nav_code=geo1614082610"
+      },
+      {
+        "name": "사회정책대학원 공지사항",
+        "path": "/HOME/geog/sub.htm?nav_code=geo1614082609"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/geog/sub.htm?nav_code=geo1666847056"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "LIS",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학부공지사항",
+        "path": "/HOME/lis/sub.htm?nav_code=lis1622460108"
+      },
+      {
+        "name": "대학원공지사항",
+        "path": "/HOME/lis/sub.htm?nav_code=lis1622515347"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/lis/sub.htm?nav_code=lis1622460107"
+      },
+      {
+        "name": "취업정보",
+        "path": "/HOME/lis/sub.htm?nav_code=lis1622460105"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "PSY",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학부 공지사항",
+        "path": "/HOME/psychology/sub.htm?nav_code=psy1614066241"
+      },
+      {
+        "name": "대학원 공지사항",
+        "path": "/HOME/psychology/sub.htm?nav_code=psy1614066238"
+      },
+      {
+        "name": "자유게시판(모집, 채용, 홍보)",
+        "path": "/HOME/psychology/sub.htm?nav_code=psy1614066239"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "SWK",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학부 공지사항",
+        "path": "/HOME/knusw/sub.htm?nav_code=knu1623026178"
+      },
+      {
+        "name": "일반대학원 공지사항",
+        "path": "/HOME/knusw/sub.htm?nav_code=knu1623026186"
+      },
+      {
+        "name": "사회정책 공지사항",
+        "path": "/HOME/knusw/sub.htm?nav_code=knu1625124571"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "MED",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학부 공지사항",
+        "path": "/HOME/masscom/sub.htm?nav_code=mas1614079680"
+      },
+      {
+        "name": "대학원 공지사항",
+        "path": "/HOME/masscom/sub.htm?nav_code=mas1614079677"
+      },
+      {
+        "name": "공모전/채용정보/홍보",
+        "path": "/HOME/masscom/sub.htm?nav_code=mas1614079678"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/masscom/sub.htm?nav_code=mas1614079679"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
   }
 ]
