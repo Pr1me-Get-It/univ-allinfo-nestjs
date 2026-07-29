@@ -1,7 +1,7 @@
 export interface ScrapeConfig {
   code: string; // 예: 'CSE'
   baseUrl: string; // 기본 주소
-  boards: { name: string; path: string }[]; // 게시판들
+  boards: { name: string; path: string; maxItems?: number }[]; // 게시판들 (maxItems: 페이지네이션 없이 전체 글이 한 번에 나오는 게시판에서 상위 N건만 수집)
   pageParam: string | null; // 페이징 파라미터 (예: '?page=')
   maxPage: number; // 긁어올 최대 페이지 수
 

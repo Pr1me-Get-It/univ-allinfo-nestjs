@@ -14,7 +14,7 @@ export class ScraperService {
 
   async scrapeBoard(
     config: ScrapeConfig,
-    board: { name: string; path: string },
+    board: ScrapeConfig['boards'][number],
   ): Promise<Notice[]> {
     const notices = await extractNotices(config, board);
     if (notices.length === 0) return [];

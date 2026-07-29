@@ -8,7 +8,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const extractNotices = async (
   config: ScrapeConfig,
-  board: { name: string; path: string },
+  board: ScrapeConfig['boards'][number],
 ): Promise<Partial<Notice>[]> => {
   const notices: Partial<Notice>[] = [];
 
@@ -32,6 +32,11 @@ export const extractNotices = async (
       const $ = cheerio.load(response.data as string);
 
       $(config.selectors.row).each((_, element) => {
+        // 페이지네이션 없이 전체 글이 한 번에 나오는 게시판은 maxItems로 상위 N건만 수집
+        if (board.maxItems && notices.length >= board.maxItems) {
+          return false;
+        }
+
         const titleEl = $(element).find(config.selectors.title);
 
         // 제목 엘리먼트 안에 뱃지/본문 미리보기 등이 섞여 있는 사이트는
