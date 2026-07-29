@@ -972,5 +972,269 @@
       "title": ".subject a",
       "date": "td:nth-child(5)"
     }
+  },
+  {
+    "code": "ACH",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/appchem/sub.htm?nav_code=app1623134012"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/appchem/sub.htm?nav_code=app1623134011"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "ARC",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "건축학부게시판",
+        "path": "/HOME/arch/sub.htm?nav_code=arc1623133855"
+      },
+      {
+        "name": "학년별공지사항",
+        "path": "/HOME/arch/sub.htm?nav_code=arc1623110358"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/arch/sub.htm?nav_code=arc1623134220"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "CHE",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/cheme/sub.htm?nav_code=che1646700302"
+      },
+      {
+        "name": "채용",
+        "path": "/HOME/cheme/sub.htm?nav_code=che1648009521"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/cheme/sub.htm?nav_code=che1646700318"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "CIV",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/civil/sub.htm?nav_code=civ1614066197"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/civil/sub.htm?nav_code=civ1614066196"
+      },
+      {
+        "name": "취업공지",
+        "path": "/HOME/civil/sub.htm?nav_code=civ1614066195"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "ENV",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학부 공지사항",
+        "path": "/HOME/env/sub.htm?nav_code=env1624500229"
+      },
+      {
+        "name": "대학원 공지사항",
+        "path": "/HOME/env/sub.htm?nav_code=env1633062955"
+      },
+      {
+        "name": "행사안내",
+        "path": "/HOME/env/sub.htm?nav_code=env1637036719"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "MEH",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학부 공지사항",
+        "path": "/HOME/me/sub.htm?nav_code=me1623370438"
+      },
+      {
+        "name": "대학원 공지사항",
+        "path": "/HOME/me/sub.htm?nav_code=me1623639997"
+      },
+      {
+        "name": "채용정보",
+        "path": "/HOME/me/sub.htm?nav_code=me1623370436"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "MSE",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/material/sub.htm?nav_code=mat1623632513"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "NSE",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "공지사항",
+        "path": "/HOME/kremse/sub.htm?nav_code=kre1640045053"
+      },
+      {
+        "name": "채용정보",
+        "path": "/HOME/kremse/sub.htm?nav_code=kre1646824653"
+      },
+      {
+        "name": "장학금 안내",
+        "path": "/HOME/kremse/sub.htm?nav_code=kre1648435308"
+      },
+      {
+        "name": "대학원 공지사항",
+        "path": "/HOME/kremse/sub.htm?nav_code=kre1647851860"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "PLM",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학사 공지사항",
+        "path": "/HOME/knupolymer/sub.htm?nav_code=knu1623888520"
+      },
+      {
+        "name": "대학원 공지사항",
+        "path": "/HOME/knupolymer/sub.htm?nav_code=knu1624584001"
+      },
+      {
+        "name": "대학원 자료실",
+        "path": "/HOME/knupolymer/sub.htm?nav_code=knu1624584022"
+      },
+      {
+        "name": "채용공고",
+        "path": "/HOME/knupolymer/sub.htm?nav_code=knu1623888519"
+      },
+      {
+        "name": "고분자 소식_졸업생이야기",
+        "path": "/HOME/knupolymer/sub.htm?nav_code=knu1624584033"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
+  },
+  {
+    "code": "TEX",
+    "baseUrl": "https://home.knu.ac.kr",
+    "boards": [
+      {
+        "name": "학사 공지사항",
+        "path": "/HOME/textileng/sub.htm?nav_code=tex1623029574"
+      },
+      {
+        "name": "대학원 공지사항",
+        "path": "/HOME/textileng/sub.htm?nav_code=tex1677543705"
+      },
+      {
+        "name": "자료실",
+        "path": "/HOME/textileng/sub.htm?nav_code=tex1623029573"
+      },
+      {
+        "name": "채용공고",
+        "path": "/HOME/textileng/sub.htm?nav_code=tex1677543730"
+      }
+    ],
+    "pageParam": "&page=",
+    "maxPage": 1,
+    "selectors": {
+      "row": ".board_list tbody tr",
+      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
+      "title": ".subject a",
+      "date": "td:nth-child(5)"
+    }
   }
 ]
