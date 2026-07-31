@@ -22,9 +22,10 @@ export const extractNotices = async (
       await sleep(1500);
 
       // ⚠️ 403 Forbidden 에러(봇 차단) 방지를 위해 브라우저 헤더(User-Agent)를 강제 주입
+      // timeout은 axios 최상위 옵션이어야 실제로 적용됨 (headers 안에 두면 무시됨)
       const response = await axios.get(targetUrl, {
+        timeout: 10000,
         headers: {
-          timeout: 10000,
           'User-Agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         },
@@ -33,7 +34,11 @@ export const extractNotices = async (
 
       $(config.selectors.row).each((_, element) => {
         // 페이지네이션 없이 전체 글이 한 번에 나오는 게시판은 maxItems로 상위 N건만 수집
-        if (board.maxItems && notices.length >= board.maxItems) {
+        if (
+          board.maxItems &&
+          board.maxItems > 0 &&
+          notices.length >= board.maxItems
+        ) {
           return false;
         }
 
@@ -162,6 +167,15 @@ export const extractNotices = async (
         `[Scraper Extractor Error] ${config.code} - Page ${page} failed:`,
         message,
       );
+    }
+
+    // maxItems에 도달했으면 다음 페이지 요청 없이 종료
+    if (
+      board.maxItems &&
+      board.maxItems > 0 &&
+      notices.length >= board.maxItems
+    ) {
+      break;
     }
   }
 
