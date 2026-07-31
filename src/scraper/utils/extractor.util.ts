@@ -8,7 +8,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const extractNotices = async (
   config: ScrapeConfig,
-  board: { name: string; path: string },
+  board: ScrapeConfig['boards'][number],
 ): Promise<Partial<Notice>[]> => {
   const notices: Partial<Notice>[] = [];
 
@@ -22,9 +22,10 @@ export const extractNotices = async (
       await sleep(1500);
 
       // ⚠️ 403 Forbidden 에러(봇 차단) 방지를 위해 브라우저 헤더(User-Agent)를 강제 주입
+      // timeout은 axios 최상위 옵션이어야 실제로 적용됨 (headers 안에 두면 무시됨)
       const response = await axios.get(targetUrl, {
+        timeout: 10000,
         headers: {
-          timeout: 10000,
           'User-Agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         },
@@ -32,9 +33,27 @@ export const extractNotices = async (
       const $ = cheerio.load(response.data as string);
 
       $(config.selectors.row).each((_, element) => {
+        // 페이지네이션 없이 전체 글이 한 번에 나오는 게시판은 maxItems로 상위 N건만 수집
+        if (
+          board.maxItems &&
+          board.maxItems > 0 &&
+          notices.length >= board.maxItems
+        ) {
+          return false;
+        }
+
         const titleEl = $(element).find(config.selectors.title);
+
+        // 제목 엘리먼트 안에 뱃지/본문 미리보기 등이 섞여 있는 사이트는
+        // titleText(+titleTextExclude)로 텍스트만 별도로 뽑아냄
+        const titleTextEl = config.selectors.titleText
+          ? $(element).find(config.selectors.titleText).clone()
+          : titleEl.clone();
+        if (config.selectors.titleTextExclude) {
+          titleTextEl.find(config.selectors.titleTextExclude).remove();
+        }
         // 제목의 보기 흉한 줄바꿈과 다중 스페이스를 하나의 공백으로 압축합니다 (깔끔한 UI 제공)
-        const title = titleEl
+        const title = titleTextEl
           .text()
           .replace(/[\n\t\r]+/g, ' ')
           .replace(/\s+/g, ' ')
@@ -148,6 +167,15 @@ export const extractNotices = async (
         `[Scraper Extractor Error] ${config.code} - Page ${page} failed:`,
         message,
       );
+    }
+
+    // maxItems에 도달했으면 다음 페이지 요청 없이 종료
+    if (
+      board.maxItems &&
+      board.maxItems > 0 &&
+      notices.length >= board.maxItems
+    ) {
+      break;
     }
   }
 
