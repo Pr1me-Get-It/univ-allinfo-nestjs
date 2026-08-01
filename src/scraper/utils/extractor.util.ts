@@ -11,6 +11,8 @@ export const extractNotices = async (
   board: ScrapeConfig['boards'][number],
 ): Promise<Partial<Notice>[]> => {
   const notices: Partial<Notice>[] = [];
+  // 게시판별 selectors override가 있으면 config 기본값 위에 덮어씀
+  const selectors = { ...config.selectors, ...board.selectors };
 
   for (let page = 1; page <= config.maxPage; page++) {
     const targetUrl = config.pageParam
@@ -32,7 +34,7 @@ export const extractNotices = async (
       });
       const $ = cheerio.load(response.data as string);
 
-      $(config.selectors.row).each((_, element) => {
+      $(selectors.row).each((_, element) => {
         // 페이지네이션 없이 전체 글이 한 번에 나오는 게시판은 maxItems로 상위 N건만 수집
         if (
           board.maxItems &&
@@ -42,15 +44,15 @@ export const extractNotices = async (
           return false;
         }
 
-        const titleEl = $(element).find(config.selectors.title);
+        const titleEl = $(element).find(selectors.title);
 
         // 제목 엘리먼트 안에 뱃지/본문 미리보기 등이 섞여 있는 사이트는
         // titleText(+titleTextExclude)로 텍스트만 별도로 뽑아냄
-        const titleTextEl = config.selectors.titleText
-          ? $(element).find(config.selectors.titleText).clone()
+        const titleTextEl = selectors.titleText
+          ? $(element).find(selectors.titleText).clone()
           : titleEl.clone();
-        if (config.selectors.titleTextExclude) {
-          titleTextEl.find(config.selectors.titleTextExclude).remove();
+        if (selectors.titleTextExclude) {
+          titleTextEl.find(selectors.titleTextExclude).remove();
         }
         // 제목의 보기 흉한 줄바꿈과 다중 스페이스를 하나의 공백으로 압축합니다 (깔끔한 UI 제공)
         const title = titleTextEl
@@ -98,15 +100,12 @@ export const extractNotices = async (
           rawLink = rawLink.replace(/\/>/g, '');
         }
 
-        const postedAtString = $(element)
-          .find(config.selectors.date)
-          .text()
-          .trim();
+        const postedAtString = $(element).find(selectors.date).text().trim();
 
         if (!title || !rawLink) return;
 
         // 고정 공지 여부 파악 로직 추가 가능
-        // const isFixed = $(element).find(config.selectors.isFixed).length > 0;
+        // const isFixed = $(element).find(selectors.isFixed).length > 0;
 
         // 상대 경로 보정 (현재 탐색 중인 게시판 주소 기준)
         let fullUrl = '';

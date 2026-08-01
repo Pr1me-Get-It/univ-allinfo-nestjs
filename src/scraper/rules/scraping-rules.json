@@ -5,19 +5,22 @@
     "boards": [
       {
         "name": "공지사항",
-        "path": "/bbs/board.php?bo_table=sub5_1"
+        "path": "/bbs/board.php?bo_table=sub6_1_a"
       },
       {
         "name": "학부인재모집",
-        "path": "/bbs/board.php?bo_table=sub5_3_a"
+        "path": "/bbs/board.php?bo_table=sub6_3_a"
       },
       {
         "name": "취업정보",
-        "path": "/bbs/board.php?bo_table=sub5_3_b"
+        "path": "/bbs/board.php?bo_table=sub6_3_b"
       },
       {
         "name": "세미나및행사",
-        "path": "/bbs/board.php?bo_table=sub5_4"
+        "path": "/bbs/board.php?bo_table=sub6_4",
+        "selectors": {
+          "date": "td:nth-child(4)"
+        }
       }
     ],
     "pageParam": "&page=",
@@ -120,6 +123,13 @@
       {
         "name": "진로취업",
         "path": "/HOME/knujob/sub.htm?nav_code=knu1623817159"
+      },
+      {
+        "name": "현장실습",
+        "path": "/HOME/knujob/sub.htm?nav_code=knu1623826179",
+        "selectors": {
+          "date": "td:nth-child(5)"
+        }
       }
     ],
     "pageParam": "&page=",
@@ -129,24 +139,6 @@
       "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
       "title": ".subject a",
       "date": "td:nth-child(6)"
-    }
-  },
-  {
-    "code": "CARE",
-    "baseUrl": "https://home.knu.ac.kr/",
-    "boards": [
-      {
-        "name": "현장실습",
-        "path": "/HOME/knujob/sub.htm?nav_code=knu1623826179"
-      }
-    ],
-    "pageParam": "&page=",
-    "maxPage": 1,
-    "selectors": {
-      "row": ".board_list tbody tr",
-      "isFixed": "img[alt=\"공지\"], .notice, .badge, .badge-notice, .notice_icon",
-      "title": ".subject a",
-      "date": "td:nth-child(5)"
     }
   },
   {
@@ -384,10 +376,6 @@
       {
         "name": "전시회소식",
         "path": "/HOME/vcd/sub.htm?nav_code=vcd1622551690"
-      },
-      {
-        "name": "구인구직",
-        "path": "/HOME/vcd/sub.htm?nav_code=vcd1622551702"
       }
     ],
     "pageParam": "&page=",
@@ -1004,12 +992,15 @@
         "path": "/HOME/arch/sub.htm?nav_code=arc1623133855"
       },
       {
-        "name": "학년별공지사항",
-        "path": "/HOME/arch/sub.htm?nav_code=arc1623110358"
-      },
-      {
         "name": "자료실",
         "path": "/HOME/arch/sub.htm?nav_code=arc1623134220"
+      },
+      {
+        "name": "학년별공지사항",
+        "path": "/HOME/arch/sub.htm?nav_code=arc1623110358",
+        "selectors": {
+          "date": "td:nth-child(6)"
+        }
       }
     ],
     "pageParam": "&page=",
@@ -1032,10 +1023,6 @@
       {
         "name": "채용",
         "path": "/HOME/cheme/sub.htm?nav_code=che1648009521"
-      },
-      {
-        "name": "자료실",
-        "path": "/HOME/cheme/sub.htm?nav_code=che1646700318"
       }
     ],
     "pageParam": "&page=",
@@ -1274,10 +1261,6 @@
       {
         "name": "자료실",
         "path": "/HOME/acen/sub.htm?nav_code=ace1622521461"
-      },
-      {
-        "name": "행사안내",
-        "path": "/HOME/acen/sub.htm?nav_code=ace1622521460"
       }
     ],
     "pageParam": "&page=",
@@ -1324,10 +1307,6 @@
         "path": "/HOME/biofiber/sub.htm?nav_code=bio1623029353"
       },
       {
-        "name": "자료실",
-        "path": "/HOME/biofiber/sub.htm?nav_code=bio1623029352"
-      },
-      {
         "name": "취업정보",
         "path": "/HOME/biofiber/sub.htm?nav_code=bio1653980887"
       }
@@ -1370,10 +1349,6 @@
       {
         "name": "공지사항",
         "path": "/HOME/plantmed/sub.htm?nav_code=pla1677024917"
-      },
-      {
-        "name": "자료실",
-        "path": "/HOME/plantmed/sub.htm?nav_code=pla1677024916"
       }
     ],
     "pageParam": "&page=",
@@ -1418,10 +1393,6 @@
       {
         "name": "자료실",
         "path": "/HOME/koredu/sub.htm?nav_code=kor1622459694"
-      },
-      {
-        "name": "행사 및 세미나",
-        "path": "/HOME/koredu/sub.htm?nav_code=kor1622459693"
       }
     ],
     "pageParam": "&page=",
@@ -1614,10 +1585,6 @@
       {
         "name": "자료실",
         "path": "/HOME/bioedu/sub.htm?nav_code=bio1622460187"
-      },
-      {
-        "name": "행사 및 세미나",
-        "path": "/HOME/bioedu/sub.htm?nav_code=bio1622460186"
       }
     ],
     "pageParam": "&page=",
@@ -1666,10 +1633,6 @@
       {
         "name": "자료실",
         "path": "/HOME/homeedu/sub.htm?nav_code=hom1622521249"
-      },
-      {
-        "name": "취업정보",
-        "path": "/HOME/homeedu/sub.htm?nav_code=hom1622521247"
       }
     ],
     "pageParam": "&page=",
@@ -1714,10 +1677,6 @@
       {
         "name": "공지사항",
         "path": "/HOME/comedu/sub.htm?nav_code=com1744781375"
-      },
-      {
-        "name": "자료실",
-        "path": "/HOME/comedu/sub.htm?nav_code=com1744781474"
       }
     ],
     "pageParam": "&page=",
@@ -1784,10 +1743,6 @@
       {
         "name": "공지사항",
         "path": "/HOME/veterinary/sub.htm?nav_code=vet1623200224"
-      },
-      {
-        "name": "자료실",
-        "path": "/HOME/veterinary/sub.htm?nav_code=vet1623236651"
       }
     ],
     "pageParam": "&page=",
@@ -2168,10 +2123,6 @@
       {
         "name": "공지사항",
         "path": "/HOME/appbio/sub.htm?nav_code=app1700444270"
-      },
-      {
-        "name": "자료실",
-        "path": "/HOME/appbio/sub.htm?nav_code=app1700444283"
       }
     ],
     "pageParam": "&page=",
@@ -2212,10 +2163,6 @@
       {
         "name": "공지사항",
         "path": "/HOME/forest/sub.htm?nav_code=for1622521051"
-      },
-      {
-        "name": "자료실",
-        "path": "/HOME/forest/sub.htm?nav_code=for1622521050"
       },
       {
         "name": "행사안내",
@@ -2260,10 +2207,6 @@
       {
         "name": "공지사항",
         "path": "/HOME/land/sub.htm?nav_code=lan1614079746"
-      },
-      {
-        "name": "자료실",
-        "path": "/HOME/land/sub.htm?nav_code=lan1616034015"
       },
       {
         "name": "행사안내",
