@@ -6,9 +6,10 @@ import scrapingRulesData from './rules/scraping-rules.json';
 import { ScrapeConfig } from './scraper.interface';
 import { ScraperService } from './scraper.service';
 
-// 학교 자체 서버(155.230.x.x) 방화벽에서 droplet IP가 부분 차단되어
-// 일시적으로 제외. 차단 해제 확인되면 목록에서 제거할 것.
-const DISABLED_CODES = ['KNU_NEWS', 'STRT', 'SPRT', 'TCHR', 'SEE'];
+// 학교 자체 서버(155.230.x.x) 방화벽 차단 대응으로 평소엔 이 5개를 비활성화함.
+// 이 브랜치는 새 droplet IP에서 차단이 풀렸는지 확인하기 위한 임시 테스트용이라
+// 일부러 비워둠 — 테스트 끝나면 이 브랜치는 머지하지 말고 폐기할 것.
+const DISABLED_CODES: string[] = [];
 
 // 동시 요청으로 인한 재차단 위험을 배제하기 위해 완전 순차 처리 + 게시판 간 간격
 const SEQUENTIAL_DELAY_MS = 15000;
