@@ -6,9 +6,15 @@ import scrapingRulesData from './rules/scraping-rules.json';
 import { ScrapeConfig } from './scraper.interface';
 import { ScraperService } from './scraper.service';
 
-// 학교 자체 서버(155.230.x.x) 방화벽에서 droplet IP가 부분 차단되어
+// 학교 자체 서버(155.230.x.x) 방화벽에서 droplet IP가 부분/전체 차단되어
 // 일시적으로 제외. 차단 해제 확인되면 목록에서 제거할 것.
+// home.knu.ac.kr은 코드가 아니라 baseUrl 기준으로 걸러야 함 — 수십 개 학과
+// 코드가 전부 이 호스트 하나를 공유하기 때문
 const DISABLED_CODES = ['KNU_NEWS', 'STRT', 'SPRT', 'TCHR', 'SEE'];
+const DISABLED_BASE_URLS = [
+  'https://home.knu.ac.kr',
+  'https://home.knu.ac.kr/',
+];
 
 // 동시 요청으로 인한 재차단 위험을 배제하기 위해 완전 순차 처리 + 게시판 간 간격
 const SEQUENTIAL_DELAY_MS = 15000;
@@ -19,7 +25,9 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export class ScrapingOrchestratorService {
   private readonly logger = new Logger(ScrapingOrchestratorService.name);
   private readonly scrapeConfigs = (scrapingRulesData as ScrapeConfig[]).filter(
-    (config) => !DISABLED_CODES.includes(config.code),
+    (config) =>
+      !DISABLED_CODES.includes(config.code) &&
+      !DISABLED_BASE_URLS.includes(config.baseUrl),
   );
   private isRunning = false;
 
